@@ -86,7 +86,7 @@ contract WelCoin is Owned {
   function WelCoin(
     string initialName,
     string initalSymbol,
-    uint8 initalDecimals,
+    uint initialSupply,
     uint initialEtherTokenRate,
     bool initialIsRateActive,
     bool initialAutomaticIssue
@@ -95,7 +95,7 @@ contract WelCoin is Owned {
       symbol = initalSymbol;
       totalSupply = initialSupply * 10**uint(18);
       etherTokenRate = initialEtherTokenRate;
-      isRatActivee = initialIsRateActive;
+      isRateActive = initialIsRateActive;
       automaticIssue = initialAutomaticIssue;
 
       //updating initial balances
@@ -107,7 +107,23 @@ contract WelCoin is Owned {
 
   //return the balance of a Token Owner
   function balanceOf(address tokenOwner) public constant returns(uint balance) {
-    return balance[tokenOwner];
+    return balances[tokenOwner];
+  }
+
+  function totalSupply() public constant returns(uint supply) {
+    return totalSupply;
+  }
+
+  //return parameters
+  function getData() public constant returns(
+    string nameData,
+    string symbolData,
+    uint totalSupplyData,
+    uint etherTokenRateData,
+    bool isRateActiveData,
+    bool automaticIssueData
+    ) {
+    return (name, symbol, totalSupply, etherTokenRate, isRateActive, automaticIssue);
   }
 
   //Create New Account 
@@ -126,7 +142,7 @@ contract WelCoin is Owned {
       uint exchangableToken = msg.value * etherTokenRate;
 
       //Checking if there is enough remaining unused supply
-      if (balances[owner].sub(exchangableToken) >= 0)) {
+      if (balances[owner].sub(exchangableToken) >= 0) {
         //write transfer function
         balances[owner] = balances[owner].sub(exchangableToken);
         balances[newTokenOwner] = exchangableToken;
