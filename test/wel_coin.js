@@ -3,7 +3,7 @@ var WelCoin = artifacts.require("./WelCoin.sol");
 
 contract("WelCoin", function (accounts) {
   	
-	it("Checking Token Creation: [Name, Symbol, Supply, ETH/TOKEN, Exchanging Available, Automatic Issue]", async function () {
+	it("[CHECKING TOKEN] details:", async function () {
 	var test_name = "WELLCOIN";
 	var test_symbol = "WEL";
 	var test_supply = 20*10**(18);
@@ -24,8 +24,8 @@ contract("WelCoin", function (accounts) {
 
 	});
 
-
-	it("[Partition test] on newAccount() details:", async function () {
+	/*
+	it("[PARTITION TEST] on depositExchangedEther() details:", async function () {
 
 		const contract = await WelCoin.deployed();
 
@@ -49,7 +49,9 @@ contract("WelCoin", function (accounts) {
 
 	});
 
-	it("[Throw Exception Test] on newAccount() details:", async function () {
+	
+
+	it("[THROW REVERT EXCEPTION TEST] on depositExchangedEther() details:", async function () {
 
 		const contract = await WelCoin.deployed();
 
@@ -66,6 +68,29 @@ contract("WelCoin", function (accounts) {
 				assert(false, error.toString());
 			}
 		})
+
+	}); */
+
+	it("[STEPS TO TOKEN DEPOSIT] on depositTokenSteps() details:", async function () {
+
+		const contract = await WelCoin.deployed();
+
+		try {
+			const stepsDep = await contract.depositTokenSteps(5000, {
+				from: '0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70'
+			});
+			try {
+				const val = await contract.balanceOf("0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70");
+				console.log("\t 5000 -> " + val.toNumber()/10**9 + " Tokens");
+				assert.isTrue(true);
+			} catch (error) {
+				console.log(error.toString());
+			}
+		} catch (error) {
+			console.log("\t " + error.toString());
+		}
+
+		
 
 	});
 

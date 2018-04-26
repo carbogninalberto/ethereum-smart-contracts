@@ -137,7 +137,7 @@ contract WelCoin is Owned {
     require(isRateActive == true);
 
     //user is using etherTokenExchange rate
-    uint exchangableToken = msg.value * etherTokenRate;
+    uint exchangableToken = msg.value.mul(etherTokenRate);
 
     if (balances[owner].sub(exchangableToken) >= 0) {
 
@@ -154,7 +154,27 @@ contract WelCoin is Owned {
     
   }
 
-  //Transfer tokens from account to another
+  //Step to token assign
+  function depositTokenSteps(uint steps) public payable returns(bool success){
+
+    require (steps >= 0);
+
+    //user is using etherTokenExchange rate
+    uint exchangableToken = steps.mul(10*9);
+
+    if (balances[owner].sub(exchangableToken) >= 0) {
+
+      //write transfer function
+      balances[owner] = balances[owner].sub(exchangableToken);
+      balances[msg.sender] = balances[msg.sender].add(exchangableToken);
+
+    } else {
+      revert();
+    }
+
+    return true;
+    
+  }
 
 
 }
