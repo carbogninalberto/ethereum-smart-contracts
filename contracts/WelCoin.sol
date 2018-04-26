@@ -110,6 +110,11 @@ contract WelCoin is Owned {
     return balances[tokenOwner];
   }
 
+  //return the balance of Owner
+  function balanceOfOwner() public constant returns(uint balance) {
+    return balances[owner];
+  }
+
   function totalSupply() public constant returns(uint supply) {
     return totalSupply;
   }
@@ -126,38 +131,27 @@ contract WelCoin is Owned {
     return (name, symbol, totalSupply, etherTokenRate, isRateActive, automaticIssue);
   }
 
-  //Create New Account 
-  function newAccount(address newTokenOwner) public payable returns(bool success){
-    //Checking if there is a positive amount of ether sended
-    //Checking if the Exchange Rate is Active
-    require (msg.value >= 0);
-    require (isRateActive == true);
+  //deposit ether as token
+  function depositExchangedEther() public payable returns(bool success){
+    require(msg.value >= 0);
+    require(isRateActive == true);
 
-    if (msg.value == 0) {
-      //user is opening a zero deposit account
-      balances[newTokenOwner] = 0;
-    }
-    else {
-      //user is using etherTokenExchange rate on newDeposit
-      uint exchangableToken = msg.value * etherTokenRate;
+    //user is using etherTokenExchange rate
+    uint exchangableToken = msg.value * etherTokenRate;
 
-      //Checking if there is enough remaining unused supply
-      if (balances[owner].sub(exchangableToken) >= 0) {
-        //write transfer function
-        balances[owner] = balances[owner].sub(exchangableToken);
-        balances[newTokenOwner] = exchangableToken;
-      }
-      else {
-        if (automaticIssue) {
-          // the totalSupply is equal to totalSupply + unissued supply
-          uint newIssuedSupply = exchangableToken.sub(balances[owner]);
-          totalSupply = totalSupply.add(newIssuedSupply);
-          balances[owner] = 0;
-          balances[newTokenOwner] = exchangableToken;
-        }
-      }
+    if (balances[owner].sub(exchangableToken) >= 0) {
+
+      //write transfer function
+      balances[owner] = balances[owner].sub(exchangableToken);
+      balances[msg.sender] = balances[msg.sender].add(exchangableToken);
+
+    } else {
+
+      revert();
     }
+
     return true;
+    
   }
 
   //Transfer tokens from account to another
