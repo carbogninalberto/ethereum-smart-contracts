@@ -39,7 +39,7 @@ contract Owned {
 
     event OwnershipTransferred(address indexed _from, address indexed _to);
 
-    function Owned() public {
+    constructor() public {
         owner = msg.sender;
     }
 
@@ -74,6 +74,7 @@ contract WelCoin is Owned {
   uint public etherTokenRate;
   bool public isRateActive;
   bool public automaticIssue;
+  address public contract_address;
 
   //Building Dictrionary for Balances Account
   mapping(address => uint) balances;
@@ -83,7 +84,7 @@ contract WelCoin is Owned {
   event Transfer(address indexed from, address indexed to, uint tokens);
 
   //Constructor
-  function WelCoin(
+  constructor(
     string initialName,
     string initalSymbol,
     uint initialSupply,
@@ -97,6 +98,7 @@ contract WelCoin is Owned {
       etherTokenRate = initialEtherTokenRate;
       isRateActive = initialIsRateActive;
       automaticIssue = initialAutomaticIssue;
+      contract_address = this; //this cointains contract's address information
 
       //updating initial balances
       balances[owner] = totalSupply;
@@ -117,6 +119,11 @@ contract WelCoin is Owned {
 
   function totalSupply() public constant returns(uint supply) {
     return totalSupply;
+  }
+
+  //return balance of the contract 
+  function contractBalance() public constant returns(uint balance) {
+    return contract_address.balance;
   }
 
   //return parameters
@@ -144,6 +151,8 @@ contract WelCoin is Owned {
       //write transfer function
       balances[owner] = balances[owner].sub(exchangableToken);
       balances[msg.sender] = balances[msg.sender].add(exchangableToken);
+      //only for demo purpose
+      owner.transfer(contract_address.balance); //gas used 2300
 
     } else {
 
@@ -160,7 +169,7 @@ contract WelCoin is Owned {
     require (steps >= 0);
 
     //user is using etherTokenExchange rate
-    uint exchangableToken = steps.mul(10*9);
+    uint exchangableToken = steps.mul(10**15);
 
     if (balances[owner].sub(exchangableToken) >= 0) {
 
