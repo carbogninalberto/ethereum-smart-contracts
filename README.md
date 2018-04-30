@@ -1,14 +1,49 @@
-# smartcontractdemo
+# Demo
 
+Working Demo: v0.0.1
 
+### Installation
+
+Development/running demo enviroment:
+- [Node.js](https://nodejs.org/) v8+ to run.
+- [Galanche](http://truffleframework.com/ganache/) (or galanche-cli)
+- [Truffle](http://truffleframework.com/)
+
+Install the dependencies.
+
+```sh
+$ npm install
+```
+### Running Demo
+
+Setup galanche:
+  - [http://localhost:8545/]
+  - [network id]: 5777
+  - [Gas price]: 1
+
+Deploy the Smart Contract on Network:
+
+```sh
+$ truffle migrate
+```
+whether it's not the first time you're deploying use:
+
+```sh
+$ truffle migrate --reset
+```
+
+Run the server
+
+```sh
+$ npm run dev
+```
+### Testing
+Use the following commands in main directory:
+
+```sh
+$ truffle migrate
+$ truffle test ./test/wel_coin.js
+```
+
+### Other Stuff
 truff --network live console
-
-compile
-
-migrate
-
-WelCoin.new('WELLCOIN', 'WEL', 20, 1, true, true).then(function(res) { sc = WelCoin.at(res.address) })
-
-sc.address 
-
-0xe9c479a4df458907b9089a21e23349ce12a09a41
