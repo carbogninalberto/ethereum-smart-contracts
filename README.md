@@ -1,6 +1,6 @@
-# Demo
-
-Working Demo: v0.0.1
+# Demo v0.0.1
+![alt text](https://ibb.co/dsNzjH)
+Working Demo
 
 ### Installation
 
@@ -8,6 +8,7 @@ Development/running demo enviroment:
 - [Node.js](https://nodejs.org/) v8+ to run.
 - [Galanche](http://truffleframework.com/ganache/) (or galanche-cli)
 - [Truffle](http://truffleframework.com/)
+- [MetaMask](https://metamask.io/)
 
 Install the dependencies.
 
