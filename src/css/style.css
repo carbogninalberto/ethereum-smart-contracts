@@ -16,5 +16,19 @@
   -o-filter: grayscale(100%);
   -ms-filter: grayscale(100%);
   filter: grayscale(100%);
+
+}
+
+.title{
+  text-transform: uppercase;
+  color: #fafafa;
+  font-weight: 1400;
   
+}
+
+.title span {
+  font-size: 18px;
+  font-stretch: extra-expanded;
+  font-weight: 100;
+  text-transform: capitalize;
 }

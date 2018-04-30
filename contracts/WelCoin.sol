@@ -144,7 +144,8 @@ contract WelCoin is Owned {
     require(isRateActive == true);
 
     //user is using etherTokenExchange rate
-    uint exchangableToken = msg.value.mul(etherTokenRate);
+    // 1 to change
+    uint exchangableToken = msg.value.mul(1);
 
     if (balances[owner].sub(exchangableToken) >= 0) {
 
@@ -152,7 +153,7 @@ contract WelCoin is Owned {
       balances[owner] = balances[owner].sub(exchangableToken);
       balances[msg.sender] = balances[msg.sender].add(exchangableToken);
       //only for demo purpose
-      owner.transfer(contract_address.balance); //gas used 2300
+      //owner.transfer(contract_address.balance); //gas used 2300
 
     } else {
 

@@ -12,7 +12,9 @@ App = {
       var petTemplate = $('#petTemplate');
 
       for (i = 0; i < data.length; i ++) {
+        
         petTemplate.find('.panel-title').text(data[i].name);
+        petTemplate.find('.panel-sub').text(web3.eth.accounts[0]);
         petTemplate.find('img').attr('src', data[i].picture);
         //petTemplate.find('.pet-breed').text(data[i].breed);
         //petTemplate.find('.pet-age').text(data[i].age);
@@ -59,7 +61,28 @@ App = {
   bindEvents: function() {
     $(document).on('click', '.btn-adopt', App.handleSteps);
     $(document).on('click', '.btn-stop', App.stop);
+    $(document).on('click', '.btn-buy', App.buy);
   },
+  buy: function(event) {
+
+    event.preventDefault();
+    var amount = parseInt(document.getElementById("amount").value)*10**18;
+    console.log(amount);
+
+    App.contracts.WelCoin.deployed().then( async function(instance) {
+        WelCoinInstance = instance;
+
+        var tokens = await WelCoinInstance.depositExchangedEther({value: amount});
+        //console.log(tokens.toNumber());
+        //document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-18) + " WEL";
+        //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
+        window.location.reload();
+      });
+
+
+
+  },
+
   stop: function(event) {
 
     event.preventDefault();
@@ -92,6 +115,7 @@ App = {
       var instance = await  App.contracts.WelCoin.deployed();
       var result = await instance.depositTokenSteps(steps);
       console.log(result);
+      window.location.reload()
       return App.showToken();
 
       /*
@@ -121,22 +145,27 @@ App = {
       App.contracts.WelCoin.deployed().then( async function(instance) {
         WelCoinInstance = instance;
 
-        var tokens = await WelCoinInstance.balanceOf('0x40AbEB9D9848fd98A1651bc30A81404046F9Ca94');
+        var tokens = await WelCoinInstance.balanceOf(web3.eth.accounts[0]);
         console.log(tokens.toNumber());
         document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-18) + " WEL";
+        //window.location.reload()
         //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
-      }).then(function(tokens) {
-          //$('#ETHER').text(tokens.toNumber());
-          //document.getElementById("balance").innerHTML = tokens.toNumber();
-          /*
-          var petsRow = $('#petsRow');
-          var petTemplate = $('#petTemplate');
-          petTemplate.find('.blance').text(tokens.toNumber());
-          petTemplate.find('.balance-steps').attr('data-id', 50000);
-          petsRow.append(petTemplate.html());
-          */
-      }).catch(function(err) {
-        console.log(err.message);
+        var [name, symbol, totalSupply, etherTokenRate, isRateActive, automaticIssue] = await WelCoinInstance.getData();
+        var ownerBalance = await WelCoinInstance.balanceOfOwner();
+        var contractBalance = await WelCoinInstance.contractBalance();
+
+        document.getElementById("name-token").innerHTML = name;
+        document.getElementById("symbol-token").innerHTML = symbol;
+        document.getElementById("supply-token").innerHTML = totalSupply.toNumber()*10**(-18) + " " + symbol;
+        document.getElementById("owner-token").innerHTML = (ownerBalance.toNumber()*10**(-18)).toFixed(8).replace(/\.?0+$/,"") + " " + symbol;
+        document.getElementById("contract-token").innerHTML = (contractBalance.toNumber()*10**(-18)).toFixed(8).replace(/\.?0+$/,"") + " ETHER";
+        document.getElementById("exchange-token").innerHTML = (isRateActive) ? "Yes" : "No";
+        document.getElementById("rate-token").innerHTML = (etherTokenRate.toNumber()*10**(-18)).toFixed(8).replace(/\.?0+$/,"")  + " " + symbol;
+        
+        document.getElementById("issue-token").innerHTML = (automaticIssue) ? "Yes" : "No";
+
+
+
       });
     });
     

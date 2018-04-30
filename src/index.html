@@ -24,14 +24,48 @@
       <div class="background-image"></div>
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <center><img style="z-index: 1;position: relative;width: 200px;" src="img/logo.png" /></center>
+          <center><img style="z-index: 1;position: relative;width: 150px;" src="img/logo.png" /></center>
         </div>
       </div>
 
-      <div id="petsRow" class="row">
-        <!-- PETS LOAD HERE -->
+    <div class="columns" style="z-index: 0; position: relative;">
+      <div class="column is-half" id="petsRow">
       </div>
-    </div>
+      <div class="column is-half" style=" padding-top: 30px;">
+        <p class="title panel-title">
+          <b>Name:</b>
+          <span id="name-token" ></span></p>
+        <p class="title panel-title">
+          <b>Symbol:</b>
+          <span id="symbol-token" ></span>
+        </p>
+        <p class="title panel-title">
+          <b>Total Supply:</b>
+          <span id="supply-token"></span>
+        </p>
+        <p class="title panel-title">
+          <b>Owner's Balance:</b>
+          <span id="owner-token" ></span>
+        </p>
+        <p class="title panel-title">
+          <b>Contract Balance:</b>
+          <span id="contract-token"></span>
+        </p>
+        <p class="title panel-title">
+          <b>Exchange Active:</b>
+          <span id="exchange-token"></span>
+        </p>
+        <p class="title panel-title">
+          <b>Steps/Token:</b>
+          <span id="rate-token" c></span>
+        </p>
+        <p class="title panel-title">
+          <b>Automatic Token Issue:</b>
+          <span id="issue-token"></span>
+        </p>
+      </div>
+     </div>
+        
 
 
 
@@ -41,9 +75,10 @@
     
       <div class="col-sm-6 col-md-4 col-lg-3">
         <div class="panel panel-default panel-pet">
-          <div class="tile is-vertical is-4">
+          <div class="tile is-vertical is-10">
             <article class="tile is-child notification is-primary" style="background-color: #e84c3f">
-                <p class="title panel-title">Scrappy</p>
+                <p class="title panel-title" style="font-size:20px;font-weight: 800"><b>Title</b></p>
+                <p class="subtitle panel-sub" style="font-size:15px;">sub</p>
                 <p class="panel-body">
                   <center><img id="anim" style="height: 170px" src="img/anim.gif"></center>
                   
@@ -52,7 +87,18 @@
                   <strong>Steps</strong>: <span id="steps" class="steps-eth">0</span><br/>
                   <strong>Balance</strong>: <span id="tokens" class="tokensteps">0</span><br/><br>
                   <button class="button is-light btn-adopt" type="button" data-id="0">Steps2Token</button>
-                  <button id="walk" class="button is-light btn-stop" type="button" data-id="0">Stop</button>
+                  <button id="walk" class="button is-light btn-stop" type="button" data-id="0">Stop</button><br><br>
+
+                  <div class="field has-addons">
+                    <div class="control">
+                      <input id="amount" class="input" type="number" placeholder="Amount of Ether" style="width:170px;">
+                    </div>
+                    <div class="control">
+                      <a class="button is-black btn-buy">
+                        Buy WEL
+                      </a>
+                    </div>
+                  </div>
                 </p>
             </article>
           </div>
