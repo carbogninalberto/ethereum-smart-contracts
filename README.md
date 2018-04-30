@@ -1,6 +1,8 @@
 # Demo v0.0.1
 ![alt text](https://preview.ibb.co/i9iTdc/preview.png)
+
 walking animation credit @ [Peter Arumugam](https://www.behance.net/gallery/38420671/Walk-Cycle-GIF-Animation)
+
 ### Installation
 
 Development/running demo enviroment:
