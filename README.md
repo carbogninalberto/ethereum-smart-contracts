@@ -16,10 +16,10 @@ $ npm install
 ```
 ### Running Demo
 
-Setup galanche:
-  - [http://localhost:8545/]
-  - [network id]: 5777
-  - [Gas price]: 1
+Setup galanche with following parameters:
+- http://localhost:8545/
+- network id: 5777
+- Gas price: 1
 
 Deploy the Smart Contract on Network:
 
