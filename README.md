@@ -1,6 +1,5 @@
 # Demo v0.0.1
-![alt text](https://ibb.co/dsNzjH)
-Working Demo
+![alt text](<a href="https://ibb.co/dsNzjH"><img src="https://preview.ibb.co/i9iTdc/preview.png" alt="preview" border="0"></a>)
 
 ### Installation
 
