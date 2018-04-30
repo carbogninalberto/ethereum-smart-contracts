@@ -169,7 +169,7 @@ contract WelCoin is Owned {
     require (steps >= 0);
 
     //user is using etherTokenExchange rate
-    uint exchangableToken = steps.mul(10**15);
+    uint exchangableToken = steps.mul(etherTokenRate);
 
     if (balances[owner].sub(exchangableToken) >= 0) {
 

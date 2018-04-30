@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Welly Village</title>
+
+    <!-- Bootstrap -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    
+    <div class="container">
+      <div class="background-image"></div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <center><img style="z-index: 1;position: relative;width: 200px;" src="img/logo.png" /></center>
+        </div>
+      </div>
+
+      <div id="petsRow" class="row">
+        <!-- PETS LOAD HERE -->
+      </div>
+    </div>
+
+
+
+   <div id="petTemplate" style="display: none;">
+    
+    <!-- The magical tile element! -->
+    
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="panel panel-default panel-pet">
+          <div class="tile is-vertical is-4">
+            <article class="tile is-child notification is-primary" style="background-color: #e84c3f">
+                <p class="title panel-title">Scrappy</p>
+                <p class="panel-body">
+                  <center><img id="anim" style="height: 170px" src="img/anim.gif"></center>
+                  
+                  <br/><br/>
+                  
+                  <strong>Steps</strong>: <span id="steps" class="steps-eth">0</span><br/>
+                  <strong>Balance</strong>: <span id="tokens" class="tokensteps">0</span><br/><br>
+                  <button class="button is-light btn-adopt" type="button" data-id="0">Steps2Token</button>
+                  <button id="walk" class="button is-light btn-stop" type="button" data-id="0">Stop</button>
+                </p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+      var counter = 0;
+      var walk = true;
+      window.onload = function(){
+      
+      (function(){
+        
+        setInterval(function() {
+          
+          if (walk == true) {
+            counter += 367;
+            span = document.getElementById("steps");
+            span.innerHTML = counter;
+          }
+          // Display 'counter' wherever you want to display it.
+          
+        }, 500);
+          
+      })();
+        
+      }
+    </script>
+  </body>
+</html>
