@@ -1,10 +1,184 @@
 {
-  "contractName": "SafeMath",
-  "abi": [],
-  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146080604052600080fd00a165627a7a723058204f7bbac559120238b809a8bf4f3eda3f49326aa4e621cbc4d1f333a162c58a000029",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fd00a165627a7a723058204f7bbac559120238b809a8bf4f3eda3f49326aa4e621cbc4d1f333a162c58a000029",
-  "sourceMap": "525:514:0:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
-  "deployedSourceMap": "525:514:0:-;;;;;;;;",
+  "contractName": "ERC20Interface",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "tokens",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "tokenOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "tokens",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "tokenOwner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "tokenOwner",
+          "type": "address"
+        },
+        {
+          "name": "spender",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "name": "remaining",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "tokens",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "name": "tokens",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "tokens",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.18;\r\n\r\n// ----------------------------------------------------------------------------\r\n//  WELLCOIN implementation\r\n//  based on ERC20 Token\r\n//  https://theethereum.wiki/w/index.php/ERC20_Token_Standard \r\n//  Created by: Alberto Carbognin\r\n// ----------------------------------------------------------------------------\r\n\r\n\r\n// ----------------------------------------------------------------------------\r\n// Safe maths\r\n// ----------------------------------------------------------------------------\r\nlibrary SafeMath {\r\n    function add(uint a, uint b) internal pure returns (uint c) {\r\n        c = a + b;\r\n        require(c >= a);\r\n    }\r\n    function sub(uint a, uint b) internal pure returns (uint c) {\r\n        require(b <= a);\r\n        c = a - b;\r\n    }\r\n    function mul(uint a, uint b) internal pure returns (uint c) {\r\n        c = a * b;\r\n        require(a == 0 || c / a == b);\r\n    }\r\n    function div(uint a, uint b) internal pure returns (uint c) {\r\n        require(b > 0);\r\n        c = a / b;\r\n    }\r\n}\r\n\r\n// ----------------------------------------------------------------------------\r\n// Owned contract\r\n// ----------------------------------------------------------------------------\r\ncontract Owned {\r\n    address public owner;\r\n    address public newOwner;\r\n\r\n    event OwnershipTransferred(address indexed _from, address indexed _to);\r\n\r\n    constructor() public {\r\n        owner = msg.sender;\r\n    }\r\n\r\n    modifier onlyOwner {\r\n        require(msg.sender == owner);\r\n        _;\r\n    }\r\n\r\n    function transferOwnership(address _newOwner) public onlyOwner {\r\n        newOwner = _newOwner;\r\n    }\r\n    function acceptOwnership() public {\r\n        require(msg.sender == newOwner);\r\n        emit OwnershipTransferred(owner, newOwner);\r\n        owner = newOwner;\r\n        newOwner = address(0);\r\n    }\r\n}\r\n\r\n\r\n// ----------------------------------------------------------------------------\r\n//  ERC20 Interface\r\n// ----------------------------------------------------------------------------\r\ncontract ERC20Interface {\r\n    function totalSupply() public constant returns (uint);\r\n    function balanceOf(address tokenOwner) public constant returns (uint balance);\r\n    function allowance(address tokenOwner, address spender) public constant returns (uint remaining);\r\n    function transfer(address to, uint tokens) public returns (bool success);\r\n    function approve(address spender, uint tokens) public returns (bool success);\r\n    function transferFrom(address from, address to, uint tokens) public returns (bool success);\r\n\r\n    //events to track operations in real time\r\n    //indexed is needed in order to find events using indexed parameters as filter\r\n    event Transfer(address indexed from, address indexed to, uint tokens);\r\n    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);\r\n}\r\n\r\n// ----------------------------------------------------------------------------\r\n//  Official Implementation\r\n// ----------------------------------------------------------------------------\r\n\r\ncontract WelCoin is ERC20Interface, Owned {\r\n  //importing library for safe math operations\r\n  using SafeMath for uint;\r\n\r\n  //Describing Contract basic informations\r\n  string public name;\r\n  string public symbol;\r\n  uint public totalSupply;\r\n  uint public etherTokenRate;\r\n  bool public isRateActive;\r\n  bool public newIssue;\r\n  address public contract_address;\r\n\r\n  //Building Dictionary for Balances Account\r\n  mapping(address => uint) balances;\r\n  //Building Dictionary for allowance per account\r\n  //the first address allows to pay second address of uint amount\r\n  mapping(address => mapping(address => uint)) allowed;\r\n\r\n\r\n  //Constructor\r\n  constructor(\r\n    string initialName,\r\n    string initalSymbol,\r\n    uint initialSupply,\r\n    uint initialEtherTokenRate,\r\n    bool initialIsRateActive,\r\n    bool initialNewIssue\r\n    ) public {\r\n      name = initialName;\r\n      symbol = initalSymbol;\r\n      totalSupply = initialSupply * 10**uint(3);\r\n      etherTokenRate = initialEtherTokenRate;\r\n      isRateActive = initialIsRateActive;\r\n      newIssue = initialNewIssue;\r\n      contract_address = this; //this cointains contract's address information\r\n\r\n      //updating initial balances\r\n      balances[owner] = totalSupply;\r\n\r\n      //fire up Transfer event\r\n      emit Transfer(address(0), owner, totalSupply);\r\n  }\r\n\r\n  //return the balance of a Token Owner\r\n  function balanceOf(address tokenOwner) public constant returns(uint balance) {\r\n    return balances[tokenOwner];\r\n  }\r\n\r\n  //return the balance of Owner\r\n  function balanceOfOwner() public constant returns(uint balance) {\r\n    return balances[owner];\r\n  }\r\n\r\n  function totalSupply() public constant returns(uint supply) {\r\n    return totalSupply;\r\n  }\r\n\r\n  //return balance of the contract \r\n  function contractBalance() public constant returns(uint balance) {\r\n    return contract_address.balance;\r\n  }\r\n\r\n  //return parameters\r\n  function getData() public constant returns(\r\n    string nameData,\r\n    string symbolData,\r\n    uint totalSupplyData,\r\n    uint etherTokenRateData,\r\n    bool isRateActiveData,\r\n    bool newIssueData\r\n    ) {\r\n    return (name, symbol, totalSupply, etherTokenRate, isRateActive, newIssue);\r\n  }\r\n\r\n  //deposit ether as token\r\n  function depositExchangedEther() public payable returns(bool success){\r\n    require(msg.value >= 0);\r\n    require(isRateActive == true);\r\n\r\n    //user is using etherTokenExchange rate\r\n    // 1 to change\r\n    uint exchangableToken = msg.value.mul(1);\r\n\r\n    if (balances[owner].sub(exchangableToken) >= 0) {\r\n\r\n      //write transfer function\r\n      balances[owner] = balances[owner].sub(exchangableToken);\r\n      balances[msg.sender] = balances[msg.sender].add(exchangableToken);\r\n      //only for demo purpose\r\n      //owner.transfer(contract_address.balance); //gas used 2300\r\n\r\n    } else {\r\n\r\n      revert();\r\n    }\r\n\r\n    return true;\r\n    \r\n  }\r\n\r\n  //Step to token assign\r\n  function depositTokenSteps(uint steps) public payable returns(bool success){\r\n\r\n    require (steps >= 0);\r\n\r\n    //user is using etherTokenExchange rate\r\n    uint exchangableToken = steps.mul(etherTokenRate);\r\n\r\n    if (balances[owner].sub(exchangableToken) >= 0) {\r\n\r\n      //write transfer function\r\n      balances[owner] = balances[owner].sub(exchangableToken);\r\n      balances[msg.sender] = balances[msg.sender].add(exchangableToken);\r\n\r\n    } else {\r\n      revert();\r\n    }\r\n\r\n    return true;\r\n    \r\n  }\r\n\r\n  // ------------------------------------------------------------------------\r\n  // Transfer the balance from token owner's account to `to` account\r\n  // - Owner's account must have sufficient balance to transfer\r\n  // ------------------------------------------------------------------------\r\n  function transfer(address to, uint tokens) public returns (bool success) {\r\n      require(balances[msg.sender] >= tokens);\r\n      balances[msg.sender] = balances[msg.sender].sub(tokens);\r\n      balances[to] = balances[to].add(tokens);\r\n      emit Transfer(msg.sender, to, tokens);\r\n      return true;\r\n  }\r\n\r\n  // ------------------------------------------------------------------------\r\n  // Token owner can approve for `spender` to transferFrom(...) `tokens`\r\n  // from the token owner's account\r\n  // ------------------------------------------------------------------------\r\n  function approve(address spender, uint tokens) public returns (bool success) {\r\n      allowed[msg.sender][spender] = tokens;\r\n      emit Approval(msg.sender, spender, tokens);\r\n      return true;\r\n  }\r\n\r\n  // ------------------------------------------------------------------------\r\n  // Transfer `tokens` from the `from` account to the `to` account\r\n  // ------------------------------------------------------------------------\r\n  function transferFrom(address from, address to, uint tokens) public returns (bool success) {\r\n      uint256 allowance = allowed[from][msg.sender];\r\n      require(balances[from] >= tokens && allowance >= tokens);\r\n\r\n      balances[from] = balances[from].sub(tokens);\r\n      allowed[from][msg.sender] = allowed[from][msg.sender].sub(tokens);\r\n      balances[to] = balances[to].add(tokens);\r\n      emit Transfer(from, to, tokens);\r\n      return true;\r\n  }\r\n\r\n\r\n  // ------------------------------------------------------------------------\r\n  // Returns the amount of tokens approved by the owner that can be\r\n  // transferred to the spender's account\r\n  // ------------------------------------------------------------------------\r\n  function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {\r\n      return allowed[tokenOwner][spender];\r\n  }\r\n\r\n  // ------------------------------------------------------------------------\r\n  //  New Token Issuing\r\n  // ------------------------------------------------------------------------\r\n  function issueTokens(uint amount) public returns (bool success) {\r\n      require(msg.sender == owner);\r\n      if (newIssue) {\r\n        balances[owner] = balances[owner].add(amount);\r\n        totalSupply = totalSupply.add(amount);\r\n        emit Transfer(address(0), owner, amount);\r\n      } else {\r\n        revert();\r\n      }\r\n\r\n      return true;\r\n  }\r\n\r\n}",
   "sourcePath": "C:\\Users\\Alberto\\Desktop\\Tirocinio\\SmartContract\\smartcontractdemo\\contracts\\WelCoin.sol",
   "ast": {
@@ -19321,5 +19495,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-02T14:42:55.235Z"
+  "updatedAt": "2018-05-02T14:42:55.259Z"
 }

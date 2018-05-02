@@ -1,8 +1,11 @@
+var decimals = 3;
 App = {
+
   web3Provider: null,
   contracts: {},
 
   init: function() {
+
     //$('#ETHER').text('booo');
     //document.getElementById("ether").innerHTML = "New text!";
     // Load pets.
@@ -66,7 +69,7 @@ App = {
   buy: function(event) {
 
     event.preventDefault();
-    var amount = parseInt(document.getElementById("amount").value)*10**18;
+    var amount = parseInt(document.getElementById("amount").value)*10**decimals;
     console.log(amount);
 
     App.contracts.WelCoin.deployed().then( async function(instance) {
@@ -88,11 +91,11 @@ App = {
     event.preventDefault();
     if (walk) {
       walk = false;
-      document.getElementById("walk").innerHTML = "Start";
+      document.getElementById("walk").setAttribute('class', "mdi mdi-24px mdi-play-circle");
       $('#anim').attr('src','img/anim_stop.png');
     } else {
       walk = true;
-      document.getElementById("walk").innerHTML = "Stop";
+      document.getElementById("walk").setAttribute('class', "mdi mdi-24px mdi-pause-circle");
       $('#anim').attr('src','img/anim.gif');
     }
   },
@@ -115,7 +118,7 @@ App = {
       var instance = await  App.contracts.WelCoin.deployed();
       var result = await instance.depositTokenSteps(steps);
       console.log(result);
-      window.location.reload()
+      window.location.reload();
       return App.showToken();
 
       /*
@@ -147,7 +150,7 @@ App = {
 
         var tokens = await WelCoinInstance.balanceOf(web3.eth.accounts[0]);
         console.log(tokens.toNumber());
-        document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-18) + " WEL";
+        document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-decimals) + " WEL";
         //window.location.reload()
         //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
         var [name, symbol, totalSupply, etherTokenRate, isRateActive, automaticIssue] = await WelCoinInstance.getData();
@@ -156,11 +159,11 @@ App = {
 
         document.getElementById("name-token").innerHTML = name;
         document.getElementById("symbol-token").innerHTML = symbol;
-        document.getElementById("supply-token").innerHTML = totalSupply.toNumber()*10**(-18) + " " + symbol;
-        document.getElementById("owner-token").innerHTML = (ownerBalance.toNumber()*10**(-18)).toFixed(8).replace(/\.?0+$/,"") + " " + symbol;
-        document.getElementById("contract-token").innerHTML = (contractBalance.toNumber()*10**(-18)).toFixed(8).replace(/\.?0+$/,"") + " ETHER";
+        document.getElementById("supply-token").innerHTML = totalSupply.toNumber()*10**(-decimals) + " " + symbol;
+        document.getElementById("owner-token").innerHTML = (ownerBalance.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"") + " " + symbol;
+        document.getElementById("contract-token").innerHTML = (contractBalance.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"") + " ETHER";
         document.getElementById("exchange-token").innerHTML = (isRateActive) ? "Yes" : "No";
-        document.getElementById("rate-token").innerHTML = (etherTokenRate.toNumber()*10**(-18)).toFixed(8).replace(/\.?0+$/,"")  + " " + symbol;
+        document.getElementById("rate-token").innerHTML = (etherTokenRate.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"")  + " " + symbol;
         
         document.getElementById("issue-token").innerHTML = (automaticIssue) ? "Yes" : "No";
 

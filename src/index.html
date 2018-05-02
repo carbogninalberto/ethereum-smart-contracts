@@ -10,6 +10,7 @@
     <!-- Bootstrap -->
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/2.3.54/css/materialdesignicons.css" media="all" rel="stylesheet" type="text/css" />
     <link href="css/style.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -18,13 +19,13 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
+  <body  style="overflow-x: hidden;">
     
     <div class="container">
       <div class="background-image"></div>
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <center><img style="z-index: 1;position: relative;width: 150px;" src="img/logo.png" /></center>
+          <center><img style="z-index: 1;position: relative;width: 130px;" src="img/logo.png" /></center>
         </div>
       </div>
 
@@ -77,25 +78,45 @@
         <div class="panel panel-default panel-pet">
           <div class="tile is-vertical is-10">
             <article class="tile is-child notification is-primary" style="background-color: #e84c3f">
+
+
                 <p class="title panel-title" style="font-size:20px;font-weight: 800"><b>Title</b></p>
                 <p class="subtitle panel-sub" style="font-size:15px;">sub</p>
                 <p class="panel-body">
                   <center><img id="anim" style="height: 170px" src="img/anim.gif"></center>
+
                   
                   <br/><br/>
-                  
-                  <strong>Steps</strong>: <span id="steps" class="steps-eth">0</span><br/>
-                  <strong>Balance</strong>: <span id="tokens" class="tokensteps">0</span><br/><br>
-                  <button class="button is-light btn-adopt" type="button" data-id="0">Steps2Token</button>
-                  <button id="walk" class="button is-light btn-stop" type="button" data-id="0">Stop</button><br><br>
 
-                  <div class="field has-addons">
+                  
+                  <span class="icon">
+                      <i class="mdi mdi-24px mdi-walk"></i>
+                  </span>
+                  <strong>Steps</strong>: <span id="steps" class="steps-eth">0</span><br/>
+                  <span class="icon">
+                      <i class="mdi mdi-24px mdi-bank"></i>
+                  </span>
+                  <strong>Balance</strong>: <span id="tokens" class="tokensteps">0</span><br/><br>
+
+                  <button class="button is-light btn-stop" type="button" data-id="0">
+                    <span class="icon">
+                      <i id="walk" class="mdi mdi-24px mdi-pause-circle"></i>
+                    </span>
+                  </button>
+
+                  
+                  <button class="button is-light btn-adopt" type="button" data-id="0">Steps2Token</button>
+
+                  <br><br>
+
+                  <div class="field has-addons" >
+
                     <div class="control">
-                      <input id="amount" class="input" type="number" placeholder="Amount of Ether" style="width:170px;">
+                      <input id="amount" class="input" type="number" placeholder="Amount" style="width:90px;">
                     </div>
                     <div class="control">
                       <a class="button is-black btn-buy">
-                        Buy WEL
+                        Buy WELL
                       </a>
                     </div>
                   </div>

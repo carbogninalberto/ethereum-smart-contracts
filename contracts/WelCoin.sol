@@ -59,11 +59,29 @@ contract Owned {
     }
 }
 
+
 // ----------------------------------------------------------------------------
-// 
+//  ERC20 Interface
+// ----------------------------------------------------------------------------
+contract ERC20Interface {
+    function totalSupply() public constant returns (uint);
+    function balanceOf(address tokenOwner) public constant returns (uint balance);
+    function allowance(address tokenOwner, address spender) public constant returns (uint remaining);
+    function transfer(address to, uint tokens) public returns (bool success);
+    function approve(address spender, uint tokens) public returns (bool success);
+    function transferFrom(address from, address to, uint tokens) public returns (bool success);
+
+    //events to track operations in real time
+    //indexed is needed in order to find events using indexed parameters as filter
+    event Transfer(address indexed from, address indexed to, uint tokens);
+    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
+}
+
+// ----------------------------------------------------------------------------
+//  Official Implementation
 // ----------------------------------------------------------------------------
 
-contract WelCoin is Owned {
+contract WelCoin is ERC20Interface, Owned {
   //importing library for safe math operations
   using SafeMath for uint;
 
@@ -73,15 +91,15 @@ contract WelCoin is Owned {
   uint public totalSupply;
   uint public etherTokenRate;
   bool public isRateActive;
-  bool public automaticIssue;
+  bool public newIssue;
   address public contract_address;
 
-  //Building Dictrionary for Balances Account
+  //Building Dictionary for Balances Account
   mapping(address => uint) balances;
+  //Building Dictionary for allowance per account
+  //the first address allows to pay second address of uint amount
+  mapping(address => mapping(address => uint)) allowed;
 
-  //events to track operations in real time
-  //indexed is needed in order to find events using indexed parameters as filter
-  event Transfer(address indexed from, address indexed to, uint tokens);
 
   //Constructor
   constructor(
@@ -90,14 +108,14 @@ contract WelCoin is Owned {
     uint initialSupply,
     uint initialEtherTokenRate,
     bool initialIsRateActive,
-    bool initialAutomaticIssue
+    bool initialNewIssue
     ) public {
       name = initialName;
       symbol = initalSymbol;
-      totalSupply = initialSupply * 10**uint(18);
+      totalSupply = initialSupply * 10**uint(3);
       etherTokenRate = initialEtherTokenRate;
       isRateActive = initialIsRateActive;
-      automaticIssue = initialAutomaticIssue;
+      newIssue = initialNewIssue;
       contract_address = this; //this cointains contract's address information
 
       //updating initial balances
@@ -133,9 +151,9 @@ contract WelCoin is Owned {
     uint totalSupplyData,
     uint etherTokenRateData,
     bool isRateActiveData,
-    bool automaticIssueData
+    bool newIssueData
     ) {
-    return (name, symbol, totalSupply, etherTokenRate, isRateActive, automaticIssue);
+    return (name, symbol, totalSupply, etherTokenRate, isRateActive, newIssue);
   }
 
   //deposit ether as token
@@ -186,5 +204,65 @@ contract WelCoin is Owned {
     
   }
 
+  // ------------------------------------------------------------------------
+  // Transfer the balance from token owner's account to `to` account
+  // - Owner's account must have sufficient balance to transfer
+  // ------------------------------------------------------------------------
+  function transfer(address to, uint tokens) public returns (bool success) {
+      require(balances[msg.sender] >= tokens);
+      balances[msg.sender] = balances[msg.sender].sub(tokens);
+      balances[to] = balances[to].add(tokens);
+      emit Transfer(msg.sender, to, tokens);
+      return true;
+  }
+
+  // ------------------------------------------------------------------------
+  // Token owner can approve for `spender` to transferFrom(...) `tokens`
+  // from the token owner's account
+  // ------------------------------------------------------------------------
+  function approve(address spender, uint tokens) public returns (bool success) {
+      allowed[msg.sender][spender] = tokens;
+      emit Approval(msg.sender, spender, tokens);
+      return true;
+  }
+
+  // ------------------------------------------------------------------------
+  // Transfer `tokens` from the `from` account to the `to` account
+  // ------------------------------------------------------------------------
+  function transferFrom(address from, address to, uint tokens) public returns (bool success) {
+      uint256 allowance = allowed[from][msg.sender];
+      require(balances[from] >= tokens && allowance >= tokens);
+
+      balances[from] = balances[from].sub(tokens);
+      allowed[from][msg.sender] = allowed[from][msg.sender].sub(tokens);
+      balances[to] = balances[to].add(tokens);
+      emit Transfer(from, to, tokens);
+      return true;
+  }
+
+
+  // ------------------------------------------------------------------------
+  // Returns the amount of tokens approved by the owner that can be
+  // transferred to the spender's account
+  // ------------------------------------------------------------------------
+  function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {
+      return allowed[tokenOwner][spender];
+  }
+
+  // ------------------------------------------------------------------------
+  //  New Token Issuing
+  // ------------------------------------------------------------------------
+  function issueTokens(uint amount) public returns (bool success) {
+      require(msg.sender == owner);
+      if (newIssue) {
+        balances[owner] = balances[owner].add(amount);
+        totalSupply = totalSupply.add(amount);
+        emit Transfer(address(0), owner, amount);
+      } else {
+        revert();
+      }
+
+      return true;
+  }
 
 }

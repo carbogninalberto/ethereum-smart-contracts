@@ -6,7 +6,7 @@ contract("WelCoin", function (accounts) {
 	it("[CHECKING TOKEN] details:", async function () {
 	var test_name = "WELLCOIN";
 	var test_symbol = "WEL";
-	var test_supply = 20*10**(18);
+	var test_supply = 1000*10**(18);
 
 	const contract = await WelCoin.deployed();
 	const data = await contract.getData.call();
