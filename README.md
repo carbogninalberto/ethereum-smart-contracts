@@ -7,7 +7,7 @@ walking animation credit @ [Peter Arumugam](https://www.behance.net/gallery/3842
 
 Development/running demo enviroment:
 - [Node.js](https://nodejs.org/) v8+ to run.
-- [Galanche](http://truffleframework.com/ganache/) (or galanche-cli)
+- [Gananche](http://truffleframework.com/ganache/) (or gananche-cli)
 - [Truffle](http://truffleframework.com/)
 - [MetaMask](https://metamask.io/)
 
@@ -18,7 +18,7 @@ $ npm install
 ```
 ### Running Demo
 
-Setup galanche with following parameters:
+Setup gananche with following parameters:
 - http://localhost:8545/
 - network id: 5777
 - Gas price: 1
