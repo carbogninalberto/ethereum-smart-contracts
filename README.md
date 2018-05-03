@@ -9,7 +9,7 @@ Development/running demo enviroment:
 - [Node.js](https://nodejs.org/) v8+ to run.
 - [Gananche](http://truffleframework.com/ganache/) (or gananche-cli)
 - [Truffle](http://truffleframework.com/)
-- [MetaMask](https://metamask.io/)
+- [MetaMask](https://metamask.io/) (not needed anymore) 
 
 Install the dependencies.
 
