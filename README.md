@@ -1,7 +1,11 @@
-# Demo v0.0.1
+# Demo v0.1.0
 ![alt text](https://preview.ibb.co/i9iTdc/preview.png)
 
 walking animation credit @ [Peter Arumugam](https://www.behance.net/gallery/38420671/Walk-Cycle-GIF-Animation)
+### Introduction
+
+Ganache allows developer to run ethereum blockchain privately and locally.
+Truffle is a framework to develop and testing Solidity Smart Contracts.
 
 ### Installation
 
@@ -11,7 +15,7 @@ Development/running demo enviroment:
 - [Truffle](http://truffleframework.com/)
 - [MetaMask](https://metamask.io/) (not needed anymore) 
 
-Install the dependencies.
+Install the dependencies:
 
 ```sh
 $ npm install
@@ -34,7 +38,7 @@ whether it's not the first time you're deploying use:
 $ truffle migrate --reset
 ```
 
-Run the server
+Run web server:
 
 ```sh
 $ npm run dev
@@ -48,4 +52,7 @@ $ truffle test ./test/wel_coin.js
 ```
 
 ### Other Stuff
-truff --network live console
+```sh
+$ truff --network live console
+```
+
