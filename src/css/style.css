@@ -22,7 +22,10 @@
 .title{
   text-transform: uppercase;
   color: #fafafa;
-  font-weight: 1400;
+  font-size: 33px;
+  font-weight: 800;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
   
 }
 
@@ -31,4 +34,14 @@
   font-stretch: extra-expanded;
   font-weight: 100;
   text-transform: capitalize;
+}
+.wallet-address{
+  font-size: 7 px;
+}
+.panel-sub {
+  text-transform: lowercase;
+  color: #fafafa;
+  font-weight: 400;
+  margin-top: 0px;
+  padding-top: 0px;
 }

@@ -1,4 +1,18 @@
 var decimals = 3;
+var selectedNumber;
+
+function getQueryVariable(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+}
+
+//var selected_account = web3.eth.accounts[1];
 App = {
 
   web3Provider: null,
@@ -14,18 +28,48 @@ App = {
       var petsRow = $('#petsRow');
       var petTemplate = $('#petTemplate');
 
-      for (i = 0; i < data.length; i ++) {
-        
-        petTemplate.find('.panel-title').text(data[i].name);
-        petTemplate.find('.panel-sub').text(web3.eth.accounts[0]);
-        petTemplate.find('img').attr('src', data[i].picture);
-        //petTemplate.find('.pet-breed').text(data[i].breed);
-        //petTemplate.find('.pet-age').text(data[i].age);
-        //petTemplate.find('.pet-location').text(data[i].location);
-        petTemplate.find('.btn-adopt').attr('data-id', data[i].id);
+      var walletTemplate = $('#walletSelector');
+      var walletDiv = $('#walletAdd');
 
-        petsRow.append(petTemplate.html());
+      if(getQueryVariable("wallet")) {
+        selectedNumber = getQueryVariable("wallet");
+      } else {
+        selectedNumber = 0;
       }
+
+      console.log(selectedNumber.toString());
+
+
+      
+
+      for (i = 0; i < data.length; i ++) {
+        //walletTemplate.find('.wallet-option').text(web3.eth.accounts[i]);
+        if (selectedNumber == i) {
+          var optiontag = '<option class="wallet-address" value="'+i+'"selected="selected">'+data[i].name+'</option>';
+        } else {
+          var optiontag = '<option class="wallet-address" value="'+i+'"">'+data[i].name+'</option>';
+        }
+        
+        walletTemplate.append(optiontag);
+
+        //console.log(wallets);
+
+        //petTemplate.find('.panel-title').text(data[i].name);
+        //petTemplate.find('.panel-sub').text(web3.eth.accounts[0]);
+        //petTemplate.find('img').attr('src', data[i].picture);
+        //petTemplate.find('.btn-adopt').attr('data-id', data[i].id);
+
+        //petsRow.append(petTemplate.html());
+      }
+      console.log(walletTemplate);
+
+      petTemplate.find('.panel-title').text(data[selectedNumber].name);
+      petTemplate.find('.panel-sub').text(web3.eth.accounts[selectedNumber]);
+      petTemplate.find('img').attr('src', data[selectedNumber].picture);
+      petTemplate.find('.btn-adopt').attr('data-id', data[selectedNumber].id);
+      //petTemplate.find('#walletAdd').text(walletTemplate());
+
+      petsRow.append(petTemplate.html());
     });
     
 
@@ -65,7 +109,20 @@ App = {
     $(document).on('click', '.btn-adopt', App.handleSteps);
     $(document).on('click', '.btn-stop', App.stop);
     $(document).on('click', '.btn-buy', App.buy);
+    $(document).on('click', '.btn-approve', App.approve);
+    $(document).on('click', '.btn-transfer', App.transfer);
+    $(document).on('click', '.btn-choose-wallet', App.switchWallet);
   },
+
+  switchWallet: function(event) {
+    //web3.eth.accounts[selectedNumber]
+    var select = document.getElementById("walletSelector");
+    selectedNumber = parseInt(select.options[select.selectedIndex].value);
+    console.log(selectedNumber);
+    window.location.href = "http://localhost:3000/?wallet=" + selectedNumber;
+
+  },
+
   buy: function(event) {
 
     event.preventDefault();
@@ -75,13 +132,52 @@ App = {
     App.contracts.WelCoin.deployed().then( async function(instance) {
         WelCoinInstance = instance;
 
-        var tokens = await WelCoinInstance.depositExchangedEther({value: amount});
+        var tokens = await WelCoinInstance.depositExchangedEther.sendTransaction({to: instance.address, from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 100000, value: amount});
         //console.log(tokens.toNumber());
         //document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-18) + " WEL";
         //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
         window.location.reload();
       });
 
+
+
+  },
+
+  approve: function(event) {
+
+    event.preventDefault();
+    var amount = parseInt(document.getElementById("allowance-amount").value)*10**decimals;
+    var address = document.getElementById("allowance-address").value;
+
+    App.contracts.WelCoin.deployed().then( async function(instance) {
+        WelCoinInstance = instance;
+        //
+        var tokens = await WelCoinInstance.approve.sendTransaction(address, amount, {to: instance.address, from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 100000});
+        //console.log(tokens.toNumber());
+        //document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-18) + " WEL";
+        //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
+        window.location.reload();
+      });
+
+
+
+  },
+
+  transfer: function(event) {
+
+    event.preventDefault();
+    var amount = parseInt(document.getElementById("transfer-amount").value)*10**decimals;
+    var address = document.getElementById("transfer-address").value;
+
+    App.contracts.WelCoin.deployed().then( async function(instance) {
+        WelCoinInstance = instance;
+        //
+        var tokens = await WelCoinInstance.transferFrom.sendTransaction(address, web3.eth.accounts[selectedNumber], amount, {to: instance.address, from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 500000});
+        //console.log(tokens.toNumber());
+        //document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-18) + " WEL";
+        //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
+        window.location.reload();
+      });
 
 
   },
@@ -116,7 +212,7 @@ App = {
 
       var account = accounts[0];
       var instance = await  App.contracts.WelCoin.deployed();
-      var result = await instance.depositTokenSteps(steps);
+      var result = await instance.depositTokenSteps.sendTransaction(steps, {to:instance.address, from: web3.eth.accounts[selectedNumber], gas:51795, gasPrice:2});
       console.log(result);
       window.location.reload();
       return App.showToken();
@@ -144,11 +240,13 @@ App = {
         console.log(error);
       }
 
-      var account = accounts[1];
+      var account = accounts[0];
       App.contracts.WelCoin.deployed().then( async function(instance) {
         WelCoinInstance = instance;
 
-        var tokens = await WelCoinInstance.balanceOf(web3.eth.accounts[0]);
+        console.log(instance.address);
+
+        var tokens = await WelCoinInstance.balanceOf(web3.eth.accounts[selectedNumber]);
         console.log(tokens.toNumber());
         document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-decimals) + " WEL";
         //window.location.reload()

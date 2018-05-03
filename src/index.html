@@ -30,6 +30,7 @@
       </div>
 
     <div class="columns" style="z-index: 0; position: relative;">
+
       <div class="column is-half" id="petsRow">
       </div>
       <div class="column is-half" style=" padding-top: 30px;">
@@ -70,6 +71,9 @@
 
 
 
+  
+  
+
    <div id="petTemplate" style="display: none;">
     
     <!-- The magical tile element! -->
@@ -80,8 +84,23 @@
             <article class="tile is-child notification is-primary" style="background-color: #e84c3f">
 
 
-                <p class="title panel-title" style="font-size:20px;font-weight: 800"><b>Title</b></p>
-                <p class="subtitle panel-sub" style="font-size:15px;">sub</p>
+
+
+                <p class="title panel-title" style="margin-bottom: 0px; padding-bottom: 0px; "><b>Title</b></p> 
+                <span class="panel-sub">sub</span> <br><br>
+
+                <div class="field has-addons">
+                <div class="control is-expanded">
+                  <div id="walletAdd" class="select is-fullwidth">
+                    <select id="walletSelector" name="wallet">
+                    </select>
+                  </div>
+                </div>
+                <div class="control">
+                  <button type="submit" class="button is-black btn-choose-wallet">Choose</button>
+                </div>
+              </div>
+
                 <p class="panel-body">
                   <center><img id="anim" style="height: 170px" src="img/anim.gif"></center>
 
@@ -98,6 +117,9 @@
                   </span>
                   <strong>Balance</strong>: <span id="tokens" class="tokensteps">0</span><br/><br>
 
+                  
+                  <strong>Convert steps</strong>:<br/><br>
+
                   <button class="button is-light btn-stop" type="button" data-id="0">
                     <span class="icon">
                       <i id="walk" class="mdi mdi-24px mdi-pause-circle"></i>
@@ -109,6 +131,7 @@
 
                   <br><br>
 
+                  <strong>Buy WELL</strong>:<br/><br>
                   <div class="field has-addons" >
 
                     <div class="control">
@@ -120,6 +143,43 @@
                       </a>
                     </div>
                   </div>
+
+                  <strong>Allowance WEL</strong>:<br/><br>
+
+                  <div class="field has-addons">
+                    <p class="control">
+                      <span class="">
+                        <input id="allowance-address" class="input" type="text" placeholder="Address">
+                      </span>
+                    </p>
+                    <p class="control">
+                      <input id="allowance-amount" class="input" type="text" placeholder="Amount" style="width:90px;">
+                    </p>
+                    <p class="control">
+                      <a class="button btn-approve is-black">
+                        Approve
+                      </a>
+                    </p>
+                  </div>
+
+                  <strong>Transfer WEL</strong>:<br/><br>
+
+                  <div class="field has-addons">
+                    <p class="control">
+                      <span class="">
+                        <input id="transfer-address" class="input" type="text" placeholder="Address">
+                      </span>
+                    </p>
+                    <p class="control">
+                      <input id="transfer-amount" class="input" type="text" placeholder="Amount" style="width:90px;">
+                    </p>
+                    <p class="control">
+                      <a class="button btn-transfer is-black">
+                        Transfer
+                      </a>
+                    </p>
+                  </div>
+
                 </p>
             </article>
           </div>
