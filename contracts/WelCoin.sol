@@ -89,7 +89,8 @@ contract WelCoin is ERC20Interface, Owned {
   string public name;
   string public symbol;
   uint public totalSupply;
-  uint public etherTokenRate;
+  uint public decimals;
+  uint public stepsTokenRate;
   bool public isRateActive;
   bool public newIssue;
   address public contract_address;
@@ -106,14 +107,16 @@ contract WelCoin is ERC20Interface, Owned {
     string initialName,
     string initalSymbol,
     uint initialSupply,
-    uint initialEtherTokenRate,
+    uint initialStepsTokenRate,
+    uint initialDecimals,
     bool initialIsRateActive,
     bool initialNewIssue
     ) public {
       name = initialName;
       symbol = initalSymbol;
-      totalSupply = initialSupply * 10**uint(3);
-      etherTokenRate = initialEtherTokenRate;
+      decimals = initialDecimals;
+      totalSupply = initialSupply * 10**uint(initialDecimals);
+      stepsTokenRate = initialStepsTokenRate;
       isRateActive = initialIsRateActive;
       newIssue = initialNewIssue;
       contract_address = this; //this cointains contract's address information
@@ -149,11 +152,11 @@ contract WelCoin is ERC20Interface, Owned {
     string nameData,
     string symbolData,
     uint totalSupplyData,
-    uint etherTokenRateData,
+    uint stepsTokenRateData,
     bool isRateActiveData,
     bool newIssueData
     ) {
-    return (name, symbol, totalSupply, etherTokenRate, isRateActive, newIssue);
+    return (name, symbol, totalSupply, stepsTokenRate, isRateActive, newIssue);
   }
 
   //deposit ether as token
@@ -163,7 +166,7 @@ contract WelCoin is ERC20Interface, Owned {
 
     //user is using etherTokenExchange rate
     // 1 to change
-    uint exchangableToken = msg.value.mul(1);
+    uint exchangableToken = msg.value.div(10**11);
 
     if (balances[owner].sub(exchangableToken) >= 0) {
 
@@ -188,7 +191,7 @@ contract WelCoin is ERC20Interface, Owned {
     require (steps >= 0);
 
     //user is using etherTokenExchange rate
-    uint exchangableToken = steps.mul(etherTokenRate);
+    uint exchangableToken = steps.mul(stepsTokenRate);
 
     if (balances[owner].sub(exchangableToken) >= 0) {
 

@@ -1,6 +1,12 @@
+//decimal for Token
 var decimals = 3;
+//Selected Account
 var selectedNumber;
+var UsersJSON;
 
+// ------------------------------------------------------------------------
+//  Retrieve the value of a url variable
+// ------------------------------------------------------------------------
 function getQueryVariable(variable)
 {
        var query = window.location.search.substring(1);
@@ -12,19 +18,15 @@ function getQueryVariable(variable)
        return(false);
 }
 
-//var selected_account = web3.eth.accounts[1];
 App = {
 
   web3Provider: null,
   contracts: {},
 
   init: function() {
-
-    //$('#ETHER').text('booo');
-    //document.getElementById("ether").innerHTML = "New text!";
-    // Load pets.
     
     $.getJSON('../steps.json', function(data) {
+      UsersJSON = data;
       var petsRow = $('#petsRow');
       var petTemplate = $('#petTemplate');
 
@@ -37,13 +39,9 @@ App = {
         selectedNumber = 0;
       }
 
-      console.log(selectedNumber.toString());
-
-
-      
-
       for (i = 0; i < data.length; i ++) {
-        //walletTemplate.find('.wallet-option').text(web3.eth.accounts[i]);
+
+        //show selected account
         if (selectedNumber == i) {
           var optiontag = '<option class="wallet-address" value="'+i+'"selected="selected">'+data[i].name+'</option>';
         } else {
@@ -51,23 +49,12 @@ App = {
         }
         
         walletTemplate.append(optiontag);
-
-        //console.log(wallets);
-
-        //petTemplate.find('.panel-title').text(data[i].name);
-        //petTemplate.find('.panel-sub').text(web3.eth.accounts[0]);
-        //petTemplate.find('img').attr('src', data[i].picture);
-        //petTemplate.find('.btn-adopt').attr('data-id', data[i].id);
-
-        //petsRow.append(petTemplate.html());
       }
-      console.log(walletTemplate);
 
       petTemplate.find('.panel-title').text(data[selectedNumber].name);
       petTemplate.find('.panel-sub').text(web3.eth.accounts[selectedNumber]);
       petTemplate.find('img').attr('src', data[selectedNumber].picture);
       petTemplate.find('.btn-adopt').attr('data-id', data[selectedNumber].id);
-      //petTemplate.find('#walletAdd').text(walletTemplate());
 
       petsRow.append(petTemplate.html());
     });
@@ -94,10 +81,8 @@ App = {
       // Get the necessary contract artifact file and instantiate it with truffle-contract
       var WelCoinArtifact = data;
       App.contracts.WelCoin = TruffleContract(WelCoinArtifact);
-
       // Set the provider for our contract
       App.contracts.WelCoin.setProvider(App.web3Provider);
-
       // Use our contract to retrieve and mark the adopted pets
       return App.showToken();
     });
@@ -105,17 +90,73 @@ App = {
     return App.bindEvents();
   },
 
+  showToken: function(adopters, account) {
+    var WelCoinInstance;
+     web3.eth.getAccounts(async function(error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+      var account = accounts[0];
+      App.contracts.WelCoin.deployed().then( async function(instance) {
+
+        WelCoinInstance = instance;
+
+        var tokens = await WelCoinInstance.balanceOf(web3.eth.accounts[selectedNumber]);
+        console.log(tokens.toNumber());
+        document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-decimals) + " WELL";
+
+        var [name, symbol, totalSupply, etherTokenRate, isRateActive, automaticIssue] = await WelCoinInstance.getData();
+        var ownerBalance = await WelCoinInstance.balanceOfOwner();
+        var contractBalance = await WelCoinInstance.contractBalance();
+
+        //setup Contract Information
+        document.getElementById("name-token").innerHTML = name;
+        document.getElementById("symbol-token").innerHTML = symbol;
+        document.getElementById("supply-token").innerHTML = totalSupply.toNumber()*10**(-decimals) + " " + symbol;
+        document.getElementById("owner-token").innerHTML = (ownerBalance.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"") + " " + symbol;
+        document.getElementById("contract-token").innerHTML = (contractBalance.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"") + " ETHER";
+        document.getElementById("exchange-token").innerHTML = (isRateActive) ? "Yes" : "No";
+        document.getElementById("rate-token").innerHTML = (etherTokenRate.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"")  + " " + symbol;
+        document.getElementById("issue-token").innerHTML = (automaticIssue) ? "Yes" : "No";
+
+      });
+    });
+    
+  },
+
   bindEvents: function() {
     $(document).on('click', '.btn-adopt', App.handleSteps);
+    $(document).on('click', '.btn-choose-wallet', App.switchWallet);
     $(document).on('click', '.btn-stop', App.stop);
     $(document).on('click', '.btn-buy', App.buy);
     $(document).on('click', '.btn-approve', App.approve);
     $(document).on('click', '.btn-transfer', App.transfer);
-    $(document).on('click', '.btn-choose-wallet', App.switchWallet);
+    
+  },
+
+  handleSteps: function(event) {
+    event.preventDefault();
+    counter = 0;
+
+    var steps = parseInt(document.getElementById("steps").innerHTML);
+    var convertStepsInstance;
+
+    web3.eth.getAccounts(async function(error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+
+      var account = accounts[0];
+      var instance = await  App.contracts.WelCoin.deployed();
+      var result = await instance.depositTokenSteps.sendTransaction(steps, {to:instance.address, 
+        from: web3.eth.accounts[selectedNumber], gas:51795, gasPrice:2});
+      console.log(result);
+      window.location.reload();
+      return App.showToken();
+    });
   },
 
   switchWallet: function(event) {
-    //web3.eth.accounts[selectedNumber]
     var select = document.getElementById("walletSelector");
     selectedNumber = parseInt(select.options[select.selectedIndex].value);
     console.log(selectedNumber);
@@ -123,67 +164,7 @@ App = {
 
   },
 
-  buy: function(event) {
-
-    event.preventDefault();
-    var amount = parseInt(document.getElementById("amount").value)*10**decimals;
-    console.log(amount);
-
-    App.contracts.WelCoin.deployed().then( async function(instance) {
-        WelCoinInstance = instance;
-
-        var tokens = await WelCoinInstance.depositExchangedEther.sendTransaction({to: instance.address, from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 100000, value: amount});
-        //console.log(tokens.toNumber());
-        //document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-18) + " WEL";
-        //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
-        window.location.reload();
-      });
-
-
-
-  },
-
-  approve: function(event) {
-
-    event.preventDefault();
-    var amount = parseInt(document.getElementById("allowance-amount").value)*10**decimals;
-    var address = document.getElementById("allowance-address").value;
-
-    App.contracts.WelCoin.deployed().then( async function(instance) {
-        WelCoinInstance = instance;
-        //
-        var tokens = await WelCoinInstance.approve.sendTransaction(address, amount, {to: instance.address, from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 100000});
-        //console.log(tokens.toNumber());
-        //document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-18) + " WEL";
-        //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
-        window.location.reload();
-      });
-
-
-
-  },
-
-  transfer: function(event) {
-
-    event.preventDefault();
-    var amount = parseInt(document.getElementById("transfer-amount").value)*10**decimals;
-    var address = document.getElementById("transfer-address").value;
-
-    App.contracts.WelCoin.deployed().then( async function(instance) {
-        WelCoinInstance = instance;
-        //
-        var tokens = await WelCoinInstance.transferFrom.sendTransaction(address, web3.eth.accounts[selectedNumber], amount, {to: instance.address, from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 500000});
-        //console.log(tokens.toNumber());
-        //document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-18) + " WEL";
-        //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
-        window.location.reload();
-      });
-
-
-  },
-
   stop: function(event) {
-
     event.preventDefault();
     if (walk) {
       walk = false;
@@ -196,81 +177,57 @@ App = {
     }
   },
 
-  handleSteps: function(event) {
+  buy: function(event) {
 
     event.preventDefault();
-    counter = 0;
+    var amount = document.getElementById("amount").value;
 
-    var steps = parseInt(document.getElementById("steps").innerHTML);
-
-    var convertStepsInstance;
-
-    web3.eth.getAccounts(async function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
-
-      var account = accounts[0];
-      var instance = await  App.contracts.WelCoin.deployed();
-      var result = await instance.depositTokenSteps.sendTransaction(steps, {to:instance.address, from: web3.eth.accounts[selectedNumber], gas:51795, gasPrice:2});
-      console.log(result);
-      window.location.reload();
-      return App.showToken();
-
-      /*
-
-      App.contracts.WelCoin.deployed().then(function(instance) {
-        convertStepsInstance = instance;
-
-        // Execute adopt as a transaction by sending account
-        return convertStepsInstance.depositTokenSteps(500000, {from: account});
-      }).then(function(result) {
-        return App.showToken(); 
-      }).catch(function(err) {
-        console.log(err.message);
-      });
-      */
-    });
-  },
-
-  showToken: function(adopters, account) {
-    var WelCoinInstance;
-     web3.eth.getAccounts(async function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
-
-      var account = accounts[0];
-      App.contracts.WelCoin.deployed().then( async function(instance) {
+    App.contracts.WelCoin.deployed().then( async function(instance) {
         WelCoinInstance = instance;
-
-        console.log(instance.address);
-
-        var tokens = await WelCoinInstance.balanceOf(web3.eth.accounts[selectedNumber]);
-        console.log(tokens.toNumber());
-        document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-decimals) + " WEL";
-        //window.location.reload()
-        //return WelCoinInstance.balanceOf('0xb61e4014eAEc6BAC156C24E8b2bea4AAE814Ee70');
-        var [name, symbol, totalSupply, etherTokenRate, isRateActive, automaticIssue] = await WelCoinInstance.getData();
-        var ownerBalance = await WelCoinInstance.balanceOfOwner();
-        var contractBalance = await WelCoinInstance.contractBalance();
-
-        document.getElementById("name-token").innerHTML = name;
-        document.getElementById("symbol-token").innerHTML = symbol;
-        document.getElementById("supply-token").innerHTML = totalSupply.toNumber()*10**(-decimals) + " " + symbol;
-        document.getElementById("owner-token").innerHTML = (ownerBalance.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"") + " " + symbol;
-        document.getElementById("contract-token").innerHTML = (contractBalance.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"") + " ETHER";
-        document.getElementById("exchange-token").innerHTML = (isRateActive) ? "Yes" : "No";
-        document.getElementById("rate-token").innerHTML = (etherTokenRate.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"")  + " " + symbol;
-        
-        document.getElementById("issue-token").innerHTML = (automaticIssue) ? "Yes" : "No";
-
-
-
+        var tokens = await WelCoinInstance.depositExchangedEther.sendTransaction({to: instance.address, 
+          from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 100000, value: web3.toWei(amount)});
+        window.location.reload();
       });
-    });
-    
   },
+
+  approve: function(event) {
+
+    event.preventDefault();
+    var amount = parseInt(document.getElementById("allowance-amount").value*10**decimals);
+    var address = document.getElementById("allowance-address").value;
+
+    App.contracts.WelCoin.deployed().then( async function(instance) {
+        WelCoinInstance = instance;
+        try {
+        var tokens = await WelCoinInstance.approve.sendTransaction(address, amount, {to: instance.address, 
+          from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 100000});
+        window.location.reload();
+      } catch (err) {
+        alert( UsersJSON[selectedNumber].name +"! Error on approving allowance for address:\r" + address 
+            + "\rDetails: \r" + err);
+      }
+      });
+  },
+
+  transfer: function(event) {
+
+    event.preventDefault();
+    var amount = parseInt(document.getElementById("transfer-amount").value*10**decimals);
+    var address = document.getElementById("transfer-address").value;
+
+    App.contracts.WelCoin.deployed().then( async function(instance) {
+        WelCoinInstance = instance;
+        try {
+          var tokens = await WelCoinInstance.transferFrom.sendTransaction(address, web3.eth.accounts[selectedNumber], 
+            amount, {to: instance.address, from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 500000});
+          window.location.reload();
+        } catch (err) {
+          alert( UsersJSON[selectedNumber].name +"! Error on processing your transaction.\rAsk to this user: "+ address 
+            + " to approve allowance! Details: \r" + err);
+        }
+        
+      });
+  } 
 
 };
 
