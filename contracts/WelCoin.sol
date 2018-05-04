@@ -1,5 +1,6 @@
 pragma solidity ^0.4.18;
 
+
 // ----------------------------------------------------------------------------
 //  WELLCOIN implementation
 //  based on ERC20 Token
@@ -7,6 +8,7 @@ pragma solidity ^0.4.18;
 //  Created by: Alberto Carbognin
 // ----------------------------------------------------------------------------
 
+import "./Torneo.sol";
 
 // ----------------------------------------------------------------------------
 // Safe maths
@@ -77,6 +79,7 @@ contract ERC20Interface {
     event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
 }
 
+
 // ----------------------------------------------------------------------------
 //  Official Implementation
 // ----------------------------------------------------------------------------
@@ -101,6 +104,7 @@ contract WelCoin is ERC20Interface, Owned {
   //the first address allows to pay second address of uint amount
   mapping(address => mapping(address => uint)) allowed;
 
+  mapping(address => address) contractsAddresses;
 
   //Constructor
   constructor(
@@ -146,6 +150,84 @@ contract WelCoin is ERC20Interface, Owned {
   function contractBalance() public constant returns(uint balance) {
     return contract_address.balance;
   }
+
+  //deploy new contract 
+  function deployChallenge(
+    string challengeName, 
+    string challengeDescription, 
+    uint challengePrize,
+    uint challengeFee, 
+    uint challengeTarget, 
+    string challengeTargetDescription) public returns(bool success) {
+
+    if (balances[msg.sender] >= (challengePrize*10**decimals)) {
+      Torneo challenge = new Torneo(
+      challengeName, 
+      challengeDescription, 
+      challengePrize, 
+      challengeFee, 
+      challengeTarget, 
+      challengeTargetDescription,
+      msg.sender,
+      decimals
+      );
+
+      balances[msg.sender] = balances[msg.sender].sub(challengePrize*10**decimals);
+      balances[challenge] = balances[challenge].add(challengePrize*10**decimals);
+      contractsAddresses[msg.sender] = challenge;
+
+    } else {
+      revert();
+    }
+
+    
+
+    return true;
+  }
+
+  function challengeAddress(address challengeOwner) public returns (address challenge) {
+    return contractsAddresses[challengeOwner];
+  }
+
+  //automatic prize issuing
+  function prizeIssue() public returns(bool success) {
+
+    Torneo challenge = Torneo(contractsAddresses[msg.sender]);
+    challenge.issuePrize(this);
+    /*
+    uint i = 0;
+    
+    while(i < contractsAddresses[msg.sender].length) {
+
+     challenge = Torneo(contractsAddresses[msg.sender][i]);
+     challenge.issuePrize(this);
+     i += 1;
+    }*/
+
+    
+
+    return true;
+  }
+
+  function getWinner() public constant returns(address winner) {
+    Torneo challenge = Torneo(contractsAddresses[msg.sender]);
+    return challenge.getWinner();
+  }
+
+  function partecipateToChallengeOf(address challengeOwner, uint tokens) public returns(bool success){
+    require(tokens >= 0);
+    Torneo challenge = Torneo(contractsAddresses[challengeOwner]);
+    challenge.partecipate(tokens);
+    return true;
+  }
+
+  function depositDataChallenge(address challengeOwner, uint data) public returns(bool success){
+    require(data >= 0);
+    Torneo challenge = Torneo(contractsAddresses[challengeOwner]);
+    challenge.updateTarget(data);
+    return true;
+  }
+
 
   //return parameters
   function getData() public constant returns(
