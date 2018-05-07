@@ -83,7 +83,16 @@ App = {
       App.contracts.WelCoin = TruffleContract(WelCoinArtifact);
       // Set the provider for our contract
       App.contracts.WelCoin.setProvider(App.web3Provider);
-      // Use our contract to retrieve and mark the adopted pets
+
+
+      $.getJSON('ChallengeManager.json', function(data) {
+      // Get the necessary contract artifact file and instantiate it with truffle-contract
+      var ChallengeManager = data;
+      App.contracts.ChallengeManager = TruffleContract(ChallengeManager);
+      // Set the provider for our contract
+      App.contracts.ChallengeManager.setProvider(App.web3Provider);
+      });
+
       return App.showToken();
     });
 
