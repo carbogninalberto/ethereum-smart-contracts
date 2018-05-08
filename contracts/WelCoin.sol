@@ -290,6 +290,19 @@ contract WelCoin is ERC20Interface, Owned {
   }
 
   // ------------------------------------------------------------------------
+  // Virtual Deposit `tokens` from the `from` account to the `to` account
+  // ------------------------------------------------------------------------
+  function virtualDepositTransferFrom(address from, address to, uint tokens) public returns (bool success) {
+      require(balances[from] >= tokens);
+
+      balances[from] = balances[from].sub(tokens);
+      balances[to] = balances[to].add(tokens);
+      emit Transfer(from, to, tokens);
+      return true;
+  }
+
+
+  // ------------------------------------------------------------------------
   // Transfer the balance from token owner's account to `to` account
   // - Owner's account must have sufficient balance to transfer
   // ------------------------------------------------------------------------

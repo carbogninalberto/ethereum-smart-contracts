@@ -12,6 +12,7 @@ import "./WelCoin.sol";
 
 contract ChallengeManager is Owned {
 	using SafeMath for uint;
+	address public contractAddress;
 
 	struct Challenge {
 		string name;
@@ -22,12 +23,11 @@ contract ChallengeManager is Owned {
 		uint target;
 		uint fee;
 		address owner;
-		uint256 challengeHash;
-		mapping (address => bool) participants;
+		string challengeHash;
+		address[] participants;
 	}
 
-	mapping (address => Challenge[]) public ledger;
-	mapping (address => uint) public numberOfChallenge;
+	Challenge[] public challenges;
 
 	event Creation(address own);
 
@@ -42,14 +42,15 @@ contract ChallengeManager is Owned {
 		string targetDescriptionCreate,
 		uint prizeCreate,
 		uint targetCreate,
-		uint feeCreate
+		uint feeCreate,
+		string hash
 		) public returns(bool success) {
 
 		require (feeCreate >= 0);
 		require (prizeCreate >= 0);
 		require (targetCreate >= 0);
 
-		Challenge memory newChall = Challenge(
+		challenges.push(Challenge(
 			nameCreate,
 			descriptionCreate,
 			targetDescriptionCreate,
@@ -57,33 +58,45 @@ contract ChallengeManager is Owned {
 			prizeCreate,
 			targetCreate,
 			feeCreate,
-			owner,
-			0);
-
-		ledger[msg.sender].push(newChall);
-
-		ledger[msg.sender][ledger[msg.sender].length-1].challengeHash = uint256(keccak256(nameCreate, descriptionCreate, targetDescriptionCreate, now, prizeCreate, targetCreate, feeCreate));
-		numberOfChallenge[msg.sender] += 1;
+			msg.sender,
+			hash,
+			new address[](0)
+			));
 
         return true;
     }
 
-    function participateToChallenge(address challOwn, uint256 hash, uint partFee) public returns(bool success) {
-    	
+    function participateToChallenge(address contracadd, string hash, uint partFee) public returns(bool success) {
+
+    	uint challengeLength = challenges.length;
+    	for (uint i = 0; i < challengeLength; i++) {
+    		
+    		if ((keccak256(challenges[i].challengeHash) == keccak256(hash)) && (partFee >= challenges[i].fee)) {
+    			//WelCoin cont = WelCoin(contracadd);
+    			WelCoin(contracadd).virtualDepositTransferFrom(msg.sender, challenges[i].owner, challenges[i].fee);
+    			challenges[i].participants.push(msg.sender);
+    			return true;
+    		}
+    	}
+
+    	/*
     	uint arrleng = ledger[challOwn].length;
     	for (uint i=0; i<arrleng; i++) {
 
     		if ((ledger[challOwn][i].challengeHash == hash) && (partFee >= ledger[challOwn][i].fee)) {
-    			WelCoin cont = WelCoin(challOwn);
+    			WelCoin cont = WelCoin(contractAddress);
     			cont.transferFrom(msg.sender, challOwn, ledger[challOwn][i].fee);
     			ledger[challOwn][i].participants[msg.sender] = true;
     			return true;
     		}
     		i++;
     	}
+    	*/
 
     	return false;
     }
+
+    /*
 
     function getLedgerLength(address challOwn) public constant returns(uint length) {
     	return ledger[challOwn].length;
@@ -94,6 +107,15 @@ contract ChallengeManager is Owned {
     }
     function getChallengeName(uint id) public constant returns(string namecode) {
     	return ledger[msg.sender][id].name;
+    }
+
+    */
+
+    function setContractAddress(address contAdd) public returns(bool success){
+
+    	require (msg.sender == owner);
+    	contractAddress = contAdd;
+    	return true;
     }
 
 

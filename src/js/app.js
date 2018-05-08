@@ -1,3 +1,4 @@
+const tippy = require('tippy.js');
 //decimal for Token
 var decimals = 3;
 //Selected Account
