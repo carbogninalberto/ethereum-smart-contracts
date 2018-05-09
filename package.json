@@ -22,6 +22,7 @@
   "homepage": "https://github.com/carbogninalberto/smartcontractdemo#readme",
   "dependencies": {
     "lite-server": "^2.3.0",
+    "micromodal": "^0.3.2",
     "qr-image": "^3.2.0"
   }
 }

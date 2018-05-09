@@ -1,3 +1,21 @@
+
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -142px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+    height: 142px; /* .push must be the same height as .footer */
+}
+
+
 .background-image {
   position: fixed;
   left: 0;
@@ -47,4 +65,13 @@
 }
 
 .is-input {
+}
+
+.tabs.is-toggle li.is-active a {
+  border-color: black;
+  background-color: black;
+}
+
+.tabs.is-toggle li+li {
+  background-color: #fff;
 }

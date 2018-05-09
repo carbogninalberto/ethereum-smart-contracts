@@ -19,7 +19,11 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+
   <body  style="overflow-x: hidden;">
+
+
+
     
     <div class="container">
       <div class="background-image"></div>
@@ -33,40 +37,87 @@
 
       <div class="column is-half" id="petsRow">
       </div>
-      <div class="column is-half" style=" padding-top: 30px;">
-        <p class="title panel-title">
-          <b>Name:</b>
-          <span id="name-token" ></span></p>
-        <p class="title panel-title">
-          <b>Symbol:</b>
-          <span id="symbol-token" ></span>
-        </p>
-        <p class="title panel-title">
-          <b>Total Supply:</b>
-          <span id="supply-token"></span>
-        </p>
-        <p class="title panel-title">
-          <b>Owner's Balance:</b>
-          <span id="owner-token" ></span>
-        </p>
-        <p class="title panel-title">
-          <b>Contract Balance:</b>
-          <span id="contract-token"></span>
-        </p>
-        <p class="title panel-title">
-          <b>Exchange Active:</b>
-          <span id="exchange-token"></span>
-        </p>
-        <p class="title panel-title">
-          <b>Steps/Token:</b>
-          <span id="rate-token" c></span>
-        </p>
-        <p class="title panel-title">
-          <b>Automatic Token Issue:</b>
-          <span id="issue-token"></span>
-        </p>
+
+
+      <div class="column is-half">
+
+        <article class="tile is-child notification is-primary" style="background-color: #347b5eb8;">
+
+
+
+
+        <div class="is-right" style="text-align: right">
+
+          <button class="button is-black" aria-haspopup="true" aria-controls="dropdown-menu4">
+                        
+            <span class="icon">
+              <i id="walk" class="mdi mdi-24px mdi-eye"></i>
+            </span>
+            <span style="padding-left: 5px;" onclick="toggleToken()"> Switch View</span>
+          </button>
+
+        </div>
+
+
+
+
+        <div id="token-info" style="padding-top: 5px; display: none;">
+          <p class="title panel-title">
+            <b>Name:</b>
+            <span id="name-token" ></span></p>
+          <p class="title panel-title">
+            <b>Symbol:</b>
+            <span id="symbol-token" ></span>
+          </p>
+          <p class="title panel-title">
+            <b>Circulating Tokens:</b>
+            <span id="supply-token"></span>
+          </p>
+          <p class="title panel-title">
+            <b>Owner's Balance (supply):</b>
+            <span id="owner-token" ></span>
+          </p>
+          <p class="title panel-title">
+            <b>Contract Balance:</b>
+            <span id="contract-token"></span>
+          </p>
+          <p class="title panel-title">
+            <b>Exchange Active:</b>
+            <span id="exchange-token"></span>
+          </p>
+          <p class="title panel-title">
+            <b>Steps/Token:</b>
+            <span id="rate-token" c></span>
+          </p>
+          <p class="title panel-title">
+            <b>Automatic Token Issue:</b>
+            <span id="issue-token"></span>
+          </p>
+        </div>
+
+        <div id="challenge-info" style="padding-top: 5px;">
+
+
+          <p class="title"> Available Challenge </p>
+          <div id="challenge-content" style="text-align: right;">
+            
+          </div>
+        
+
+
+        </div>
+
+
+
+
+        
+        </article>
       </div>
+
+
      </div>
+        
+
         
 
 
@@ -81,7 +132,7 @@
       <div class="col-sm-6 col-md-4 col-lg-3">
         <div class="panel panel-default panel-pet">
           <div class="tile is-vertical is-10">
-            <article class="tile is-child notification is-primary" style="background-color: #86ab8ad6;">
+            <article class="tile is-child notification is-primary" style="background-color: #347b5eb8;">
 
 
 
@@ -128,6 +179,66 @@
 
                   
                   <button class="button is-black btn-adopt" type="button" data-id="0">Steps2Token</button>
+
+
+
+                  
+
+                  <div class="dropdown is-hoverable is-up">
+                    <div class="dropdown-trigger">
+                      <button class="button is-black" aria-haspopup="true" aria-controls="dropdown-menu4">
+                        
+                        <span class="icon">
+                          <i id="walk" class="mdi mdi-24px mdi-circle-edit-outline"></i>
+                        </span>
+                        <span> Challenge Editor </span>
+                      </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu4" role="menu" style="">
+                      <div class="dropdown-content">
+                        <div class="dropdown-item">
+
+                          <p class="title" style="font-size:20px">Challenge Information</p>
+                          <p class="is-small">
+
+
+
+                            <div class="columns" style="z-index: 0; position: relative;">
+
+                              <div class="column is-half">
+                                 Name: <br>
+                                <input id="chall-name" class="input" type="text" placeholder="Name" style="width:250px;"> <br> <br>
+
+                                Description:  <br>
+                                <input id="chall-descrip" class="input" type="text" placeholder="Description" style="width:250px;"> <br> <br>
+
+                                Challenge Goal: <br>
+                                 <input id="chall-goal" class="input" type="number" placeholder="Challenge Goal" style="width:250px;"> <br> <br>
+                              </div>
+                              <div class="column is-half">
+                                Goal Description:  <br>
+                                <input id="chall-goal-descrip" class="input" type="text" placeholder="Goal Description" style="width:250px;">  <br> <br>
+
+                                Prize: <br>
+                                <input id="chall-prize" class="input" type="number" placeholder="Prize" style="width:250px;">  <br> <br>
+
+                                Fee:  <br> 
+                                <input id="chall-fee" class="input" type="number" placeholder="Fee" style="width:250px;"> <br> <br>
+
+                                <button class="button is-black btn-chall" type="button" data-id="0">Confirm Challenge Creation</button>
+                              </div>
+                            </div>
+                           
+                            
+                            
+
+
+
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
                   <br><br>
 
@@ -180,12 +291,116 @@
                     </p>
                   </div>
 
+
+
+
                 </p>
             </article>
           </div>
         </div>
       </div>
+
+  </div>
+
+
+<div id="challenge-created" style="display: none">
+
+  <article class="message is-small is-black" style="background-color: #0a0a0a1f;">
+    <div class="message-header" style="background-color: #ffffff00;">
+      <p id="descriptit" style="font-size:20px;font-weight:300;">descript</p>
+      <button class="delete is-small" aria-label="delete"></button>
     </div>
+    <div class="message-body" style="text-align:right">
+      <div class="field is-grouped is-grouped-multiline">
+
+
+
+        <div class="control">
+          <div class="tags has-addons">
+            <span class="tag is-black">Name</span>
+            <span id="nameit" class="tag is-light">0</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="tags has-addons">
+            <span class="tag is-black">Goal</span>
+            <span id="goalit" class="tag is-light">0</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="tags has-addons">
+            <span class="tag is-black">Timestamp</span>
+            <span id="timstampit" class="tag is-light">0</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="tags has-addons">
+            <span class="tag is-black">Goal Description</span>
+            <span id="goaldescripit" class="tag is-light">0</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="tags has-addons">
+            <span class="tag is-black">Prize</span>
+            <span id="prizeit" class="tag is-light">0</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="tags has-addons">
+            <span class="tag is-black">Fee</span>
+            <span id="feeit" class="tag is-light">0</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="tags has-addons">
+            <span class="tag is-black">Owner</span>
+            <span id="ownerit" class="tag is-light">0</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="tags has-addons">
+            <span class="tag is-black">hash</span>
+            <span id="hashit" class="tag is-light">0</span>
+          </div>
+        </div>
+
+        
+
+
+      </div>
+        <button class="button is-black btn-join" type="button" data-id="0">Join the Challenge</button>
+
+      <div class="dropdown is-hoverable is-up" style="text-align: center;font-size: 12px;">
+        <div class="dropdown-trigger">
+          <button class="button is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
+            <span> Participants</span>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu4" role="menu" style="">
+          <div class="dropdown-content">
+            <div class="dropdown-item">
+
+              <p class="title is-black" style="font-size:10px; text-align: left;">Address</p>
+              <p id="listed-participants" class="is-small">
+                
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </article>
+</div>
+  
 
      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -195,7 +410,8 @@
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
     <script src="https://unpkg.com/tippy.js@2.5.2/dist/tippy.all.min.js"></script>
-    
+
+
 
     <script>
       var counter = 0;
@@ -217,6 +433,12 @@
           
       })();
         
+      }
+
+      function toggleToken(){
+        
+        $("#token-info").toggle();
+        $("#challenge-info").toggle();
       }
     </script>
   </body>

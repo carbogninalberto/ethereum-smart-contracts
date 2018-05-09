@@ -23,11 +23,12 @@ contract ChallengeManager is Owned {
 		uint target;
 		uint fee;
 		address owner;
-		string challengeHash;
+		bytes32 challengeHash;
 		address[] participants;
 	}
 
 	Challenge[] public challenges;
+	uint public challengesLength;
 
 	event Creation(address own);
 
@@ -43,7 +44,8 @@ contract ChallengeManager is Owned {
 		uint prizeCreate,
 		uint targetCreate,
 		uint feeCreate,
-		string hash
+		bytes32 hash,
+		uint256 nowUnix
 		) public returns(bool success) {
 
 		require (feeCreate >= 0);
@@ -54,7 +56,7 @@ contract ChallengeManager is Owned {
 			nameCreate,
 			descriptionCreate,
 			targetDescriptionCreate,
-			now,
+			nowUnix,
 			prizeCreate,
 			targetCreate,
 			feeCreate,
@@ -63,18 +65,21 @@ contract ChallengeManager is Owned {
 			new address[](0)
 			));
 
+		challengesLength++;
+
         return true;
     }
 
-    function participateToChallenge(address contracadd, string hash, uint partFee) public returns(bool success) {
+    function participateToChallenge(address contracadd, string hash) public returns(bool success) {
 
     	uint challengeLength = challenges.length;
     	for (uint i = 0; i < challengeLength; i++) {
     		
-    		if ((keccak256(challenges[i].challengeHash) == keccak256(hash)) && (partFee >= challenges[i].fee)) {
+    		if (challenges[i].challengeHash == keccak256(hash)) {
     			//WelCoin cont = WelCoin(contracadd);
     			WelCoin(contracadd).virtualDepositTransferFrom(msg.sender, challenges[i].owner, challenges[i].fee);
     			challenges[i].participants.push(msg.sender);
+
     			return true;
     		}
     	}
@@ -116,6 +121,14 @@ contract ChallengeManager is Owned {
     	require (msg.sender == owner);
     	contractAddress = contAdd;
     	return true;
+    }
+
+    function getChallengeParticipantsLength(uint challIndex) public constant returns(uint length) {
+    	return challenges[challIndex].participants.length;
+    }
+
+    function getChallengeParticipants(uint index1, uint index2) public returns(address participant){
+    	return challenges[index1].participants[index2];
     }
 
 

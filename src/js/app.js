@@ -1,4 +1,4 @@
-const tippy = require('tippy.js');
+
 //decimal for Token
 var decimals = 3;
 //Selected Account
@@ -21,11 +21,12 @@ function getQueryVariable(variable)
 
 App = {
 
+
   web3Provider: null,
   contracts: {},
 
   init: function() {
-    
+
     $.getJSON('../steps.json', function(data) {
       UsersJSON = data;
       var petsRow = $('#petsRow');
@@ -92,6 +93,62 @@ App = {
       App.contracts.ChallengeManager = TruffleContract(ChallengeManager);
       // Set the provider for our contract
       App.contracts.ChallengeManager.setProvider(App.web3Provider);
+
+
+       App.contracts.ChallengeManager.deployed().then( async function(instance) {
+
+        
+          var deployed;
+
+          var challengeRow = $('#challenge-content');
+          var challengeTemplate = $('#challenge-created');
+          var challengePar = $('#listed-participants');
+
+          var text;
+          var length = await instance.challengesLength.call({to: instance.address, 
+                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+
+          console.log(length.toNumber());
+
+
+          for (i = 0; i < length.toNumber(); i++) {
+
+            deployed = await instance.challenges.call(i, {to: instance.address, 
+                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+            console.log(deployed);
+
+            partLength = await instance.getChallengeParticipantsLength.call(i, {to: instance.address, 
+                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+
+            for (j = 0; j < partLength.toNumber(); j++) {
+              textIneed = await instance.getChallengeParticipants.call(i, j, {to: instance.address, 
+                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+
+              text = "<p>" + textIneed + "</p>";
+
+              //challengePar.find('#listed-participants').text(text.toString());
+              challengePar.append(text.toString());
+              console.log(challengePar);
+              //console.log(text);
+              //challengePar.append(text.toString());
+            }
+
+            var timestamp = new Date( deployed[3] *1);
+
+            challengeTemplate.find('#hashit').text(deployed[8]);
+            challengeTemplate.find('#nameit').text(deployed[0]);
+            challengeTemplate.find('#descriptit').text(deployed[1]);
+            challengeTemplate.find('#goalit').text(deployed[5].toNumber());
+            challengeTemplate.find('#timstampit').text(timestamp.toLocaleDateString());
+            challengeTemplate.find('#goaldescripit').text(deployed[2]);
+            challengeTemplate.find('#prizeit').text(deployed[4].toNumber());
+            challengeTemplate.find('#feeit').text(deployed[6].toNumber());
+            challengeTemplate.find('#ownerit').text(deployed[7]);
+            challengeRow.append(challengeTemplate.html());
+            console.log(deployed[9]);
+
+          }
+        });
       });
 
       return App.showToken();
@@ -131,6 +188,13 @@ App = {
 
       });
     });
+
+
+
+
+
+    
+
     
   },
 
@@ -141,6 +205,8 @@ App = {
     $(document).on('click', '.btn-buy', App.buy);
     $(document).on('click', '.btn-approve', App.approve);
     $(document).on('click', '.btn-transfer', App.transfer);
+    $(document).on('click', '.btn-chall', App.ChallengeManager);
+    $(document).on('click', '.btn-join', App.JoinChallenge);
     
   },
 
@@ -237,9 +303,82 @@ App = {
         }
         
       });
+  },
+
+  ChallengeManager: function(event) {
+
+    event.preventDefault();
+
+    var name = document.getElementById("chall-name").value;
+    var description = document.getElementById("chall-descrip").value;
+    var goal = parseInt(document.getElementById("chall-goal").value);
+    var goalDescrip = document.getElementById("chall-goal-descrip").value;
+    var prize = parseInt(document.getElementById("chall-prize").value);
+    var fee = parseInt(document.getElementById("chall-fee").value);
+
+    try {
+      App.contracts.ChallengeManager.deployed().then( async function(instance) {
+
+        WelCoinInstance = instance;
+        var nowDate = Date.now();
+        var hashingString = name + description + goalDescrip + prize + goal + fee + web3.eth.accounts[selectedNumber] + nowDate;
+
+        hashingString = web3.sha3(web3.toHex(hashingString), {encoding:"hex"});
+        var deployed = await instance.createChallenge.sendTransaction(name, description, goalDescrip, prize, goal, fee, hashingString, nowDate, {to: instance.address, 
+          from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+        console.log(deployed);
+
+      });
+      window.location.reload();
+    } catch (err) {
+        alert( UsersJSON[selectedNumber].name +"! Error on creating challenge for address:\r" + address 
+            + "\rDetails: \r" + err);
+      }
+    
+
+
+  },  
+
+  JoinChallenge: function(event) {
+
+    event.preventDefault();
+
+    try {
+
+        App.contracts.ChallengeManager.deployed().then( async function(instance) {
+
+          WelCoinInstance = instance;
+
+          var deployed = await instance.challenges.call(0, {to: instance.address, 
+            from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
+          console.log(deployed[8]);
+
+          var string = deployed[0] + deployed[1] + deployed[2] + deployed[4] + deployed[5] + deployed[6] + deployed[7] + deployed[3];
+          console.log(string);
+
+
+          App.contracts.WelCoin.deployed().then(async function(instanceWel){
+              var participate = await instance.participateToChallenge.sendTransaction(instanceWel.address, string, {to: instance.address, 
+                    from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 90000000});
+          //console.log(participate);
+
+          });
+      
+          
+
+        });
+     //window.location.reload();
+    } catch (err) {
+        alert( UsersJSON[selectedNumber].name +"! Error on join challenge:\r" + address 
+            + "\rDetails: \r" + err);
+      }
+    
+
+
   } 
 
 };
+
 
 $(function() {
   $(window).load(function() {
