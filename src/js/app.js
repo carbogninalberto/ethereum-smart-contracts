@@ -356,13 +356,22 @@ App = {
           var string = deployed[0] + deployed[1] + deployed[2] + deployed[4] + deployed[5] + deployed[6] + deployed[7] + deployed[3];
           console.log(string);
 
+          try {
+            
+            App.contracts.WelCoin.deployed().then(async function(instanceWel){
+                var participate = await instance.participateToChallenge.sendTransaction(instanceWel.address, string, {to: instance.address, 
+                      from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 90000000});
+            //console.log(participate);
 
-          App.contracts.WelCoin.deployed().then(async function(instanceWel){
-              var participate = await instance.participateToChallenge.sendTransaction(instanceWel.address, string, {to: instance.address, 
-                    from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 90000000});
-          //console.log(participate);
+            }).then(window.location.reload());
 
-          });
+          } catch (err) {
+
+            alert( UsersJSON[selectedNumber].name +"! Error on join challenge:\r" + address 
+            + "\rDetails: \r" + err);
+
+          }
+          
       
           
 

@@ -104,6 +104,72 @@ App.contracts.ChallengeManager.deployed().then( async function(instance) {
 ///////////////////////////////////////////////////////////////////
 
 
+
+App.contracts.ChallengeManager.deployed().then( async function(instance) {
+
+    WelCoinInstance = instance;
+
+    var deployed = await instance.challenges.call(0, {to: instance.address, 
+      from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
+    console.log(deployed[8]);
+
+    /*
+	var add = await instance.setContractAddress.call(0x836B92356FC3bDbeC58Cab10395b28717f84ED50, {to: instance.address, 
+      from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
+	console.log(add);
+
+	var addrr = await instance.contractAddress.call({to: instance.address, 
+      from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
+	console.log(addrr);
+
+	*/
+
+    var string = deployed[0] + deployed[1] + deployed[2] + deployed[4] + deployed[5] + deployed[6] + deployed[7];
+    console.log(string);
+   
+    var participate = await instance.depositGoalUnit.sendTransaction(50000, string, {to: instance.address, 
+          from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 90000000});
+    console.log(participate);
+});
+
+///////////////////////////////////////////////////////////////////
+
+
+App.contracts.ChallengeManager.deployed().then( async function(instance) {
+
+    WelCoinInstance = instance;
+
+    var deployed = await instance.challenges.call(0, {to: instance.address, 
+      from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
+    console.log(deployed[8]);
+
+    /*
+	var add = await instance.setContractAddress.call(0x836B92356FC3bDbeC58Cab10395b28717f84ED50, {to: instance.address, 
+      from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
+	console.log(add);
+
+	var addrr = await instance.contractAddress.call({to: instance.address, 
+      from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
+	console.log(addrr);
+
+	*/
+
+    var string = deployed[0] + deployed[1] + deployed[2] + deployed[4] + deployed[5] + deployed[6] + deployed[7];
+
+    console.log(deployed[12]);
+    console.log(string);
+
+    App.contracts.WelCoin.deployed().then(async function(instanceWel){
+        var participate = await instance.issuePrize.sendTransaction(instanceWel.address, string, {to: instance.address, 
+              from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 90000000});
+    	console.log(participate);
+
+    })
+});
+
+///////////////////////////////////////////////////////////////////
+
+
 App.contracts.ChallengeManager.deployed().then( async function(instance) {
 
         WelCoinInstance = instance;
