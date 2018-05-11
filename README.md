@@ -1,7 +1,6 @@
 # Demo v0.1.0
 ![alt text](https://preview.ibb.co/i9iTdc/preview.png)
 
-walking animation credit @ [Peter Arumugam](https://www.behance.net/gallery/38420671/Walk-Cycle-GIF-Animation)
 ### Introduction
 
 Ganache allows developer to run ethereum blockchain privately and locally.
