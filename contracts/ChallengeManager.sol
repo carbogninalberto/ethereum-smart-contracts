@@ -127,16 +127,20 @@ contract ChallengeManager is Owned {
 	function depositGoalUnit(uint goalUnit, string hash) public returns(bool success){
 
 		uint challengeLength = challenges.length;
+
     	for (uint i = 0; i < challengeLength; i++) {
     		
     		if (challenges[i].challengeHash == keccak256(hash)) {
 
     			for(uint j = 0; j < challenges[i].participantsAddress.length; j++) {
+
     				if (msg.sender == challenges[i].participantsAddress[j]) {
-    					challenges[i].participantsGoal[j] += goalUnit;
-    					if (challenges[i].participantsGoal[j] >= challenges[i].target) {
+    					challenges[i].participantsGoal[j] = challenges[i].participantsGoal[j].add(goalUnit);
+
+    					if ((challenges[i].participantsGoal[j] >= challenges[i].target) && (challenges[i].winner == address(0))) {
     						challenges[i].winner = msg.sender;
     					}
+
     					return true;
     				}
     			}    		
@@ -152,18 +156,44 @@ contract ChallengeManager is Owned {
 		uint challengeLength = challenges.length;
     	for (uint i = 0; i < challengeLength; i++) {
     		
-    		if ((challenges[i].challengeHash == keccak256(hash)) && (msg.sender == challenges[i].owner)) {
+    		if ((msg.sender == challenges[i].owner) && (challenges[i].challengeHash == keccak256(hash))) {
 
     			WelCoin(contractadd).virtualDepositTransferFrom(challenges[i].owner, challenges[i].winner, challenges[i].prize);
-    			challenges[i].participantsAddress.push(msg.sender);
-    			challenges[i].participantsStatus.push(true);
-    			challenges[i].participantsGoal.push(0);
 
+    			// Deleting the Challenge
+    			// Put the last element in the gap
+    			// Deleting last element
+
+    			challenges[i] = challenges[challengeLength-1];
+    			delete challenges[challengeLength-1];
+    			challengesLength = challengesLength.sub(1);
+
+
+
+    			return true;
     		}
     	}
 
-		return true;
+		return false;
 	}   
+
+	function getChallengePartecipantsGoal(string hash) public constant returns(uint goal){
+
+		uint challengeLength = challenges.length;
+
+    	for (uint i = 0; i < challengeLength; i++) {
+    		if (challenges[i].challengeHash == keccak256(hash)) {
+
+    			for(uint j = 0; j < challenges[i].participantsAddress.length; j++) {
+    				if (msg.sender == challenges[i].participantsAddress[j]) {
+    					return challenges[i].participantsGoal[j];
+    				}
+    			} 		
+    		}
+    	}
+
+		return 0;
+	} 
 
     function setContractAddress(address contAdd) public returns(bool success){
 
@@ -176,12 +206,16 @@ contract ChallengeManager is Owned {
     	return challenges[challIndex].participantsAddress.length;
     }
 
-    function getChallengeParticipants(uint index1, uint index2) public returns(address participant){
+    function getChallengeParticipants(uint index1, uint index2) public constant returns(address participant){
     	return challenges[index1].participantsAddress[index2];
     }
 
-    function getChallengeParticipantsGoal(uint index1, uint index2) public returns(uint participant){
+    function getChallengeParticipantsGoal(uint index1, uint index2) public constant returns(uint participant){
     	return challenges[index1].participantsGoal[index2];
+    }
+
+    function getChallengeWinner(uint index1) public constant returns(address winner){
+    	return challenges[index1].winner;
     }
 
 

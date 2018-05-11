@@ -140,20 +140,21 @@
                 <p class="title panel-title" style="margin-bottom: 0px; padding-bottom: 0px; "><b>Title</b></p> 
                 <span class="panel-sub">sub</span> <br>
 
-                <div class="field has-addons" style="width:200px; margin-top: 5px;">
-                <div class="control is-expanded">
-                  <div id="walletAdd" class="select is-fullwidth is-black is-small">
-                    <select id="walletSelector" name="wallet">
-                    </select>
-                  </div>
+                 <div class="field has-addons" style="width:200px; margin-top: 5px;">
+                    <div class="control is-expanded">
+                      <div id="walletAdd" class="select is-fullwidth is-black is-small">
+                        <select id="walletSelector" name="challenge">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="control">
+                      <button type="submit" class="button is-black btn-choose-wallet is-small">Choose</button>
+                    </div>
                 </div>
-                <div class="control">
-                  <button type="submit" class="button is-black btn-choose-wallet is-small">Switch</button>
-                </div>
-              </div>
+                
 
                 <p class="panel-body">
-                  <center><img id="anim" style="height: 170px;margin-top: 10px" src="img/anim.gif"></center>
+                  <center><img id="anim" style="height: 130px;margin-top: 10px" src="img/anim.gif"></center>
 
                   
                   <br/>
@@ -168,92 +169,94 @@
                   </span>
                   <strong>Balance</strong>: <span id="tokens" class="tokensteps">0</span><br/><br>
 
-                  
-                  <strong>Convert steps</strong>:<br/><br>
+                  <div style=" text-align: left">
 
-                  <button class="button is-light btn-stop" type="button" data-id="0">
-                    <span class="icon">
-                      <i id="walk" class="mdi mdi-24px mdi-pause-circle"></i>
-                    </span>
-                  </button>
+                    <button class="button is-light btn-stop" type="button" data-id="0">
+                      <span class="icon">
+                        <i id="walk" class="mdi mdi-24px mdi-pause-circle"></i>
+                      </span>
+                    </button>
 
-                  
-                  <button class="button is-black btn-adopt" type="button" data-id="0">Steps2Token</button>
-
-
-
-                  
-
-                  <div class="dropdown is-hoverable is-up">
-                    <div class="dropdown-trigger">
-                      <button class="button is-black" aria-haspopup="true" aria-controls="dropdown-menu4">
-                        
-                        <span class="icon">
-                          <i id="walk" class="mdi mdi-24px mdi-circle-edit-outline"></i>
-                        </span>
-                        <span> Challenge Editor </span>
-                      </button>
-                    </div>
-                    <div class="dropdown-menu" id="dropdown-menu4" role="menu" style="">
-                      <div class="dropdown-content">
-                        <div class="dropdown-item">
-
-                          <p class="title" style="font-size:20px">Challenge Information</p>
-                          <p class="is-small">
+                    
+                    <button class="button is-black btn-adopt" type="button" data-id="0">Steps2Token</button>
 
 
 
-                            <div class="columns" style="z-index: 0; position: relative;">
+                    
 
-                              <div class="column is-half">
-                                 Name: <br>
-                                <input id="chall-name" class="input" type="text" placeholder="Name" style="width:250px;"> <br> <br>
+                    <div class="dropdown is-hoverable is-up">
+                      <div class="dropdown-trigger">
+                        <button class="button is-black" aria-haspopup="true" aria-controls="dropdown-menu4">
+                          
+                          <span class="icon">
+                            <i id="walk" class="mdi mdi-24px mdi-circle-edit-outline"></i>
+                          </span>
+                          <span> Challenge Editor </span>
+                        </button>
+                      </div>
+                      <div class="dropdown-menu" id="dropdown-menu4" role="menu" style="">
+                        <div class="dropdown-content">
+                          <div class="dropdown-item">
 
-                                Description:  <br>
-                                <input id="chall-descrip" class="input" type="text" placeholder="Description" style="width:250px;"> <br> <br>
+                            <p class="title" style="font-size:20px">Challenge Information</p>
+                            <p class="is-small">
 
-                                Challenge Goal: <br>
-                                 <input id="chall-goal" class="input" type="number" placeholder="Challenge Goal" style="width:250px;"> <br> <br>
+
+
+                              <div class="columns" style="z-index: 0; position: relative;">
+
+                                <div class="column is-half">
+                                   Name: <br>
+                                  <input id="chall-name" class="input" type="text" placeholder="Name" style="width:250px;"> <br> <br>
+
+                                  Description:  <br>
+                                  <input id="chall-descrip" class="input" type="text" placeholder="Description" style="width:250px;"> <br> <br>
+
+                                  Challenge Goal: <br>
+                                   <input id="chall-goal" class="input" type="number" placeholder="Challenge Goal" style="width:250px;"> <br> <br>
+                                </div>
+                                <div class="column is-half">
+                                  Goal Description:  <br>
+                                  <input id="chall-goal-descrip" class="input" type="text" placeholder="Goal Description" style="width:250px;">  <br> <br>
+
+                                  Prize: <br>
+                                  <input id="chall-prize" class="input" type="number" placeholder="Prize" style="width:250px;">  <br> <br>
+
+                                  Fee:  <br> 
+                                  <input id="chall-fee" class="input" type="number" placeholder="Fee" style="width:250px;"> <br> <br>
+
+                                  <button class="button is-black btn-chall" type="button" data-id="0">Confirm Challenge Creation</button>
+                                </div>
                               </div>
-                              <div class="column is-half">
-                                Goal Description:  <br>
-                                <input id="chall-goal-descrip" class="input" type="text" placeholder="Goal Description" style="width:250px;">  <br> <br>
 
-                                Prize: <br>
-                                <input id="chall-prize" class="input" type="number" placeholder="Prize" style="width:250px;">  <br> <br>
-
-                                Fee:  <br> 
-                                <input id="chall-fee" class="input" type="number" placeholder="Fee" style="width:250px;"> <br> <br>
-
-                                <button class="button is-black btn-chall" type="button" data-id="0">Confirm Challenge Creation</button>
-                              </div>
-                            </div>
-                           
-                            
-                            
-
-
-
-                          </p>
+                            </p>
+                          </div>
                         </div>
                       </div>
+
                     </div>
-                  </div>
 
-                  <br><br>
 
-                  <strong>Buy WELL</strong>:<br/><br>
+                     
+
+                  </div> <br>
+                  <br>
+
                   <div class="field has-addons" >
 
-                    <div class="control">
-                      <input id="amount" class="input" type="number" placeholder="Amount" style="width:90px;">
+                      <div class="control">
+                        <input id="amount" class="input" type="number" placeholder="Amount" style="width:90px; float: left">
+                      </div>
+                      <div class="control">
+                        <a class="button is-black btn-buy">
+                          Buy WELL
+                        </a>
+                      </div>
                     </div>
-                    <div class="control">
-                      <a class="button is-black btn-buy">
-                        Buy WELL
-                      </a>
-                    </div>
-                  </div>
+
+                 <br>
+
+                  <p class="title"> ERC20 Token Standard </p>
 
                   <strong>Allowance WEL</strong>:<br/><br>
 
@@ -305,12 +308,29 @@
 
 <div id="challenge-created" style="display: none">
 
+  <div class="field has-addons" style="width:400px; margin-top: 5px;">
+      <div class="control is-expanded">
+        <div id="challengeAdd" class="select is-fullwidth is-black is-small">
+          <select id="challengeSelector" name="challenge">
+          </select>
+        </div>
+      </div>
+      <div class="control">
+        <button type="submit" class="button is-black btn-choose-challenge is-small">Choose Challenge</button>
+      </div>
+  </div>
+
   <article class="message is-small is-black" style="background-color: #0a0a0a1f;">
     <div class="message-header" style="background-color: #ffffff00;">
       <p id="descriptit" style="font-size:20px;font-weight:300;">descript</p>
       <button class="delete is-small" aria-label="delete"></button>
     </div>
     <div class="message-body" style="text-align:right">
+
+      <div id = "winner-log" style="display: none;text-align: center;">
+        <img src="img/winner.png" style="height: 100px">
+        <p id="winner-log-name" class="title" style="color: #fff;font-size:15px;">Winner Name</p><br>
+      </div>
       <div class="field is-grouped is-grouped-multiline">
 
 
@@ -375,25 +395,51 @@
 
 
       </div>
-        <button class="button is-black btn-join" type="button" data-id="0">Join the Challenge</button>
+        <button id="challenge-join" class="button is-black btn-join" type="button" data-id="0">Join the Challenge</button>
 
-      <div class="dropdown is-hoverable is-up" style="text-align: center;font-size: 12px;">
-        <div class="dropdown-trigger">
-          <button class="button is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
-            <span> Participants</span>
-          </button>
-        </div>
-        <div class="dropdown-menu" id="dropdown-menu4" role="menu" style="">
-          <div class="dropdown-content">
-            <div class="dropdown-item" style="text-align: left;">
+        <div class="dropdown is-hoverable is-up" style="text-align: center;font-size: 12px;">
+          <div class="dropdown-trigger">
+            <button class="button is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
+              <span> Participants</span>
+            </button>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu4" role="menu" style="">
+            <div class="dropdown-content">
+              <div class="dropdown-item" style="text-align: left;">
 
-              <p class="title is-black" style="font-size:10px;">Address</p>
-              <p id="listed-participants" class="is-small">
-              </p>
+                <p class="title is-black" style="font-size:10px;">Address</p>
+                <p id="listed-participants" class="is-small">
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+
+        <button id="issue-prize" class="button is-light btn-issue" type="button" data-id="0">Issue Prize</button>
+
+        <div class="dropdown is-hoverable is-up">
+            <div class="dropdown-trigger">
+              <button class="button is-black" aria-haspopup="true" aria-controls="dropdown-menu4">
+                <span> {test goal} </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu4" role="menu" style="">
+              <div class="dropdown-content">
+                <div class="dropdown-item">
+                  <p class="is-small" style="text-align: left">
+
+                      Goal Units used:  <br> <br>
+                      <input data-id="0" id="chall-goal-units" class="input" type="number" placeholder="Units" style="width:140px;"> <br> <br>
+
+                      <button id="btn-test-goal" class="button is-black btn-test-goal" type="button" data-id="0"> {test goal} </button>
+
+
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
 
 
     </div>

@@ -3,6 +3,7 @@
 var decimals = 3;
 //Selected Account
 var selectedNumber;
+var selectedChall;
 var UsersJSON;
 
 // ------------------------------------------------------------------------
@@ -13,8 +14,8 @@ function getQueryVariable(variable)
        var query = window.location.search.substring(1);
        var vars = query.split("&");
        for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
+           var pair = vars[i].split("=");
+           if(pair[0] == variable){return pair[1];}
        }
        return(false);
 }
@@ -35,11 +36,15 @@ App = {
       var walletTemplate = $('#walletSelector');
       var walletDiv = $('#walletAdd');
 
+
+      console.log(getQueryVariable("wallet"));
       if(getQueryVariable("wallet")) {
         selectedNumber = getQueryVariable("wallet");
       } else {
         selectedNumber = 0;
       }
+
+       console.log(selectedNumber);
 
       for (i = 0; i < data.length; i ++) {
 
@@ -96,7 +101,7 @@ App = {
 
 
        App.contracts.ChallengeManager.deployed().then( async function(instance) {
-
+          console.log(selectedNumber);
         
           var deployed;
 
@@ -108,53 +113,104 @@ App = {
           var length = await instance.challengesLength.call({to: instance.address, 
                                 from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
 
-          console.log(length.toNumber());
+          //console.log(length.toNumber());
 
 
-          for (i = 0; i < length.toNumber(); i++) {
+          var challengeTemplateSelector = $('#challengeSelector');
+          var challengeDiv = $('#challengeAdd');
 
-            deployed = await instance.challenges.call(i, {to: instance.address, 
-                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
-            console.log(deployed);
-
-            partLength = await instance.getChallengeParticipantsLength.call(i, {to: instance.address, 
+          challengeNumber = await instance.challengesLength.call({to: instance.address, 
                                 from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
 
-            for (j = 0; j < partLength.toNumber(); j++) {
-              textIneed = await instance.getChallengeParticipants.call(i, j, {to: instance.address, 
-                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+          console.log("challengeNumber = " + challengeNumber);
 
-              text = "<p>" + textIneed + "</p>";
-
-              //challengePar.find('#listed-participants').text(text.toString());
-              challengePar.append(text.toString());
-              console.log(challengePar);
-              //console.log(text);
-              //challengePar.append(text.toString());
-            }
-
-            var timestamp = new Date( deployed[3] *1);
-
-            challengeTemplate.find('#hashit').text(deployed[8]);
-            challengeTemplate.find('#nameit').text(deployed[0]);
-            challengeTemplate.find('#descriptit').text(deployed[1]);
-            challengeTemplate.find('#goalit').text(deployed[5].toNumber());
-            challengeTemplate.find('#timstampit').text(timestamp.toLocaleDateString());
-            challengeTemplate.find('#goaldescripit').text(deployed[2]);
-            challengeTemplate.find('#prizeit').text(deployed[4].toNumber());
-            challengeTemplate.find('#feeit').text(deployed[6].toNumber());
-            challengeTemplate.find('#ownerit').text(deployed[7]);
-            challengeRow.append(challengeTemplate.html());
-            console.log(deployed[9]);
-
+          if(getQueryVariable("challenge")) {
+            selectedChall = getQueryVariable("challenge");
+            console.log(selectedNumber + " is the selectedNumber");
+          } else {
+            selectedChall = 0;
           }
+          
+
+          for (i = 0; i < parseInt(challengeNumber); i ++) {
+
+            challengeData = await instance.challenges.call(i, {to: instance.address, 
+                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+            console.log(challengeData[0]);
+
+            //show selected account
+            if (selectedNumber == i) {
+              var optiontag = '<option class="wallet-address" value="'+i+'"selected="selected">'+challengeData[0]+'</option>';
+              console.log("okl");
+            } else {
+              var optiontag = '<option class="wallet-address" value="'+i+'"">'+challengeData[0]+'</option>';
+            }
+            
+            challengeTemplateSelector.append(optiontag);
+          }
+
+
+          console.log("dss");
+          
+            
+          deployed = await instance.challenges.call(selectedChall, {to: instance.address, 
+                              from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+          //console.log(deployed);
+          
+          partLength = await instance.getChallengeParticipantsLength.call(selectedChall, {to: instance.address, 
+                              from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+          
+          for (j = 0; j < partLength.toNumber(); j++) {
+            textIneed = await instance.getChallengeParticipants.call(selectedChall, j, {to: instance.address, 
+                              from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+
+            text = "<p>" + textIneed + "</p>";
+
+            //challengePar.find('#listed-participants').text(text.toString());
+            challengePar.append(text.toString());
+            console.log(challengePar);
+            //console.log(text);
+            //challengePar.append(text.toString());
+          }
+
+          var timestamp = new Date( deployed[3] *1);
+
+          challengeTemplate.find('#hashit').text(deployed[8]);
+          challengeTemplate.find('#nameit').text(deployed[0]);
+          challengeTemplate.find('#descriptit').text(deployed[1]);
+          challengeTemplate.find('#goalit').text(deployed[5].toNumber());
+          challengeTemplate.find('#timstampit').text(timestamp.toLocaleDateString());
+          challengeTemplate.find('#goaldescripit').text(deployed[2]);
+          challengeTemplate.find('#prizeit').text(deployed[4].toNumber());
+          challengeTemplate.find('#feeit').text(deployed[6].toNumber());
+          challengeTemplate.find('#ownerit').text(deployed[7]);
+          //$('#challenge-join').data("id", i);
+          //challengeTemplate.find('#challenge-join').att("data-id", i);
+          //challengeTemplate.find('#chall-goal-units').att("data-id", i);
+          //challengeTemplate.find('#btn-test-goal').att("data-id", i);
+          console.log("I AM THE: " + deployed[7]);
+          if(web3.eth.accounts[selectedNumber] != deployed[7]) {
+            challengeTemplate.find('#issue-prize').prop("disabled", true);
+          }
+          console.log(deployed[9]);
+          
+          if(deployed[9].toString() != "0x0000000000000000000000000000000000000000") {
+            challengeTemplate.find('#winner-log').show();
+            challengeTemplate.find('#winner-log-name').text(deployed[9]);
+          }
+          
+
+          challengeRow.append(challengeTemplate.html());
+          console.log(deployed[9]);
+
+           
         });
       });
 
-      return App.showToken();
+     return App.showToken();
     });
 
-    return App.bindEvents();
+   return App.bindEvents();
   },
 
   showToken: function(adopters, account) {
@@ -169,7 +225,7 @@ App = {
         WelCoinInstance = instance;
 
         var tokens = await WelCoinInstance.balanceOf(web3.eth.accounts[selectedNumber]);
-        console.log(tokens.toNumber());
+        //console.log(tokens.toNumber());
         document.getElementById("tokens").innerHTML = tokens.toNumber()*10**(-decimals) + " WELL";
 
         var [name, symbol, totalSupply, etherTokenRate, isRateActive, automaticIssue] = await WelCoinInstance.getData();
@@ -185,6 +241,10 @@ App = {
         document.getElementById("exchange-token").innerHTML = (isRateActive) ? "Yes" : "No";
         document.getElementById("rate-token").innerHTML = (etherTokenRate.toNumber()*10**(-decimals)).toFixed(8).replace(/\.?0+$/,"")  + " " + symbol;
         document.getElementById("issue-token").innerHTML = (automaticIssue) ? "Yes" : "No";
+
+
+        
+        
 
       });
     });
@@ -207,6 +267,9 @@ App = {
     $(document).on('click', '.btn-transfer', App.transfer);
     $(document).on('click', '.btn-chall', App.ChallengeManager);
     $(document).on('click', '.btn-join', App.JoinChallenge);
+    $(document).on('click', '.btn-issue', App.IssuePrize);
+    $(document).on('click', '.btn-test-goal', App.TestGoal);
+    $(document).on('click', '.btn-choose-challenge', App.CallChallenge);
     
   },
 
@@ -339,7 +402,7 @@ App = {
 
   },  
 
-  JoinChallenge: function(event) {
+  JoinChallenge: function(even, id) {
 
     event.preventDefault();
 
@@ -349,7 +412,7 @@ App = {
 
           WelCoinInstance = instance;
 
-          var deployed = await instance.challenges.call(0, {to: instance.address, 
+          var deployed = await instance.challenges.call(selectedChall, {to: instance.address, 
             from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
           console.log(deployed[8]);
 
@@ -357,7 +420,7 @@ App = {
           console.log(string);
 
           try {
-            
+
             App.contracts.WelCoin.deployed().then(async function(instanceWel){
                 var participate = await instance.participateToChallenge.sendTransaction(instanceWel.address, string, {to: instance.address, 
                       from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 90000000});
@@ -384,7 +447,110 @@ App = {
     
 
 
-  } 
+  },
+
+  IssuePrize: function(event) {
+
+    event.preventDefault();
+
+    try {
+
+        App.contracts.ChallengeManager.deployed().then( async function(instance) {
+
+          WelCoinInstance = instance;
+
+          var deployed = await instance.challenges.call(selectedChall, {to: instance.address, 
+            from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
+          console.log(deployed[8]);
+
+          var string = deployed[0] + deployed[1] + deployed[2] + deployed[4] + deployed[5] + deployed[6] + deployed[7] + deployed[3];
+          console.log(string);
+
+          try {
+
+            App.contracts.WelCoin.deployed().then(async function(instanceWel){
+                var participate = await instance.issuePrize.sendTransaction(instanceWel.address, string, {to: instance.address, 
+                      from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 90000000});
+            //console.log(participate);
+
+            }).then(window.location.reload());
+
+          } catch (err) {
+
+            alert( UsersJSON[selectedNumber].name +"! Error on issuing prize:\r" + address 
+            + "\rDetails: \r" + err);
+
+          }
+          
+      
+          
+
+        });
+     //window.location.reload();
+    } catch (err) {
+        alert( UsersJSON[selectedNumber].name +"! Error on join challenge:\r" + address 
+            + "\rDetails: \r" + err);
+      }
+    
+
+
+  },
+
+  TestGoal: function(event) {
+
+    event.preventDefault();
+
+    try {
+
+        App.contracts.ChallengeManager.deployed().then( async function(instance) {
+
+          WelCoinInstance = instance;
+
+          var deployed = await instance.challenges.call(selectedChall, {to: instance.address, 
+            from: web3.eth.accounts[1], gasPrice: 2, gas: 5000000});
+          console.log(deployed[8]);
+
+          var string = deployed[0] + deployed[1] + deployed[2] + deployed[4] + deployed[5] + deployed[6] + deployed[7] + deployed[3];
+          console.log(string);
+
+          try {
+
+            var goal = document.getElementById("chall-goal-units").value;
+
+            var participate = await instance.depositGoalUnit.sendTransaction(goal, string, {to: instance.address, 
+                              from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 90000000});
+
+          } catch (err) {
+
+            alert( UsersJSON[selectedNumber].name +"! Error on testing Goal:\r" + address 
+            + "\rDetails: \r" + err);
+
+          }
+          
+      
+          
+
+        });
+     //window.location.reload();
+    } catch (err) {
+        alert( UsersJSON[selectedNumber].name +"! Error on join challenge:\r" + address 
+            + "\rDetails: \r" + err);
+      }
+    
+
+
+  },
+
+  CallChallenge: function(event) {
+    var select = document.getElementById("walletSelector");
+    selectedNumber = parseInt(select.options[select.selectedIndex].value);
+    //console.log(selectedNumber);
+    var selectChallenge = document.getElementById("challengeSelector");
+    selectedChallengeNumber = parseInt(selectChallenge.options[selectChallenge.selectedIndex].value);
+
+    window.location.href = "http://localhost:3000/?wallet=" + selectedNumber + "&challenge=" + selectedChallengeNumber;
+
+  }
 
 };
 
