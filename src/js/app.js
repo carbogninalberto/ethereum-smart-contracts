@@ -166,11 +166,8 @@ App = {
 
             text = "<p>" + textIneed + "</p>";
 
-            //challengePar.find('#listed-participants').text(text.toString());
             challengePar.append(text.toString());
             console.log(challengePar);
-            //console.log(text);
-            //challengePar.append(text.toString());
           }
 
           var timestamp = new Date( deployed[3] *1);
@@ -184,10 +181,7 @@ App = {
           challengeTemplate.find('#prizeit').text(deployed[4].toNumber());
           challengeTemplate.find('#feeit').text(deployed[6].toNumber());
           challengeTemplate.find('#ownerit').text(deployed[7]);
-          //$('#challenge-join').data("id", i);
-          //challengeTemplate.find('#challenge-join').att("data-id", i);
-          //challengeTemplate.find('#chall-goal-units').att("data-id", i);
-          //challengeTemplate.find('#btn-test-goal').att("data-id", i);
+
           console.log("I AM THE: " + deployed[7]);
           if(web3.eth.accounts[selectedNumber] != deployed[7]) {
             challengeTemplate.find('#issue-prize').prop("disabled", true);
@@ -424,7 +418,6 @@ App = {
             App.contracts.WelCoin.deployed().then(async function(instanceWel){
                 var participate = await instance.participateToChallenge.sendTransaction(instanceWel.address, string, {to: instance.address, 
                       from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 90000000});
-            //console.log(participate);
 
             }).then(window.location.reload());
 
@@ -434,12 +427,9 @@ App = {
             + "\rDetails: \r" + err);
 
           }
-          
-      
-          
 
         });
-     //window.location.reload();
+
     } catch (err) {
         alert( UsersJSON[selectedNumber].name +"! Error on join challenge:\r" + address 
             + "\rDetails: \r" + err);
@@ -525,13 +515,10 @@ App = {
             alert( UsersJSON[selectedNumber].name +"! Error on testing Goal:\r" + address 
             + "\rDetails: \r" + err);
 
-          }
-          
-      
-          
+          }         
 
         });
-     //window.location.reload();
+
     } catch (err) {
         alert( UsersJSON[selectedNumber].name +"! Error on join challenge:\r" + address 
             + "\rDetails: \r" + err);
@@ -544,7 +531,7 @@ App = {
   CallChallenge: function(event) {
     var select = document.getElementById("walletSelector");
     selectedNumber = parseInt(select.options[select.selectedIndex].value);
-    //console.log(selectedNumber);
+
     var selectChallenge = document.getElementById("challengeSelector");
     selectedChallengeNumber = parseInt(selectChallenge.options[selectChallenge.selectedIndex].value);
 
