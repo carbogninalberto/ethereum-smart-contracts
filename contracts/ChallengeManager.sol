@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.21;
 
 
 // ----------------------------------------------------------------------------
@@ -87,6 +87,8 @@ contract ChallengeManager is Owned {
 		// part.push(Participant(msg.sender, false, 0)); //the element 0 is the owner which is not participating
 		// ------------------------------------------------------------------------
 
+
+
 		challenges.push(Challenge(
 			nameCreate,
 			descriptionCreate,
@@ -167,12 +169,16 @@ contract ChallengeManager is Owned {
     			// Put the last element in the gap
     			// Deleting last element
     			if (challengesLength > 1) {
-    				challenges[i] = challenges[challengeLength-1];
-	    			delete challenges[challengeLength-1];
-	    			challengesLength = challengesLength.sub(1);
+    				delete challenges[i];
+    				challenges[i] = challenges[challenges.length-1];
+	    			delete challenges[challenges.length-1];
+	    			challenges.length = challenges.length-1;
+	    			challengesLength = challenges.length;
+	    			
     			} else {
-    				delete challenges[challengeLength-1];
-	    			challengesLength = challengesLength.sub(1);
+    				delete challenges[0];
+    				challenges.length = challenges.length-1;
+	    			challengesLength = challenges.length;
     			}
     			//delete challenges[i];
     			//challenges[i] = challenges[challengesLength-1];
