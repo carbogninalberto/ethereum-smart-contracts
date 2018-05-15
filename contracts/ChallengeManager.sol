@@ -16,6 +16,9 @@ contract ChallengeManager is Owned {
 	
 
 	// NOT YET SUPPORTED
+	// I asked the following question:
+	// https://github.com/ethereum/solidity/issues/4115
+	//
 	// Can't initialized Array of Struct inside a Struct.
 	// I pivot to a less elegant working solution because of this problem.
 	// ------------------------------------------------------------------------
@@ -163,11 +166,24 @@ contract ChallengeManager is Owned {
     			// Deleting the Challenge
     			// Put the last element in the gap
     			// Deleting last element
+    			if (challengesLength > 1) {
+    				challenges[i] = challenges[challengeLength-1];
+	    			delete challenges[challengeLength-1];
+	    			challengesLength = challengesLength.sub(1);
+    			} else {
+    				delete challenges[challengeLength-1];
+	    			challengesLength = challengesLength.sub(1);
+    			}
+    			//delete challenges[i];
+    			//challenges[i] = challenges[challengesLength-1];
+    			//challengesLength = challengesLength.sub(1);
 
-    			challenges[i] = challenges[challengeLength-1];
-    			delete challenges[challengeLength-1];
-    			challengesLength = challengesLength.sub(1);
 
+    			//challenges[i] = challenges[challengeLength-1];
+    			//delete challenges[challengeLength-1];
+    			//challengesLength = challengesLength.sub(1);
+
+    			// TODO: Resolve the bug in the above code.
 
 
     			return true;

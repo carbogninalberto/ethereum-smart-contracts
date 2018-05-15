@@ -139,7 +139,7 @@ App = {
             console.log(challengeData[0]);
 
             //show selected account
-            if (selectedNumber == i) {
+            if (selectedChall == i) {
               var optiontag = '<option class="wallet-address" value="'+i+'"selected="selected">'+challengeData[0]+'</option>';
               console.log("okl");
             } else {
@@ -150,52 +150,56 @@ App = {
           }
 
 
-          console.log("dss");
+          if (parseInt(challengeNumber) > 0) {
+            console.log("dss");
           
             
-          deployed = await instance.challenges.call(selectedChall, {to: instance.address, 
-                              from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
-          //console.log(deployed);
-          
-          partLength = await instance.getChallengeParticipantsLength.call(selectedChall, {to: instance.address, 
-                              from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
-          
-          for (j = 0; j < partLength.toNumber(); j++) {
-            textIneed = await instance.getChallengeParticipants.call(selectedChall, j, {to: instance.address, 
-                              from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+            deployed = await instance.challenges.call(selectedChall, {to: instance.address, 
+                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+            //console.log(deployed);
+            
+            partLength = await instance.getChallengeParticipantsLength.call(selectedChall, {to: instance.address, 
+                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
+            
+            for (j = 0; j < partLength.toNumber(); j++) {
+              textIneed = await instance.getChallengeParticipants.call(selectedChall, j, {to: instance.address, 
+                                from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
 
-            text = "<p>" + textIneed + "</p>";
+              text = "<p>" + textIneed + "</p>";
 
-            challengePar.append(text.toString());
-            console.log(challengePar);
+              challengePar.append(text.toString());
+              console.log(challengePar);
+            }
+
+            var timestamp = new Date( deployed[3] *1);
+
+            challengeTemplate.find('#hashit').text(deployed[8]);
+            challengeTemplate.find('#nameit').text(deployed[0]);
+            challengeTemplate.find('#descriptit').text(deployed[1]);
+            challengeTemplate.find('#goalit').text(deployed[5].toNumber());
+            challengeTemplate.find('#timstampit').text(timestamp.toLocaleDateString());
+            challengeTemplate.find('#goaldescripit').text(deployed[2]);
+            challengeTemplate.find('#prizeit').text(deployed[4].toNumber());
+            challengeTemplate.find('#feeit').text(deployed[6].toNumber());
+            challengeTemplate.find('#ownerit').text(deployed[7]);
+
+            console.log("I AM THE: " + deployed[7]);
+            if(web3.eth.accounts[selectedNumber] != deployed[7]) {
+              challengeTemplate.find('#issue-prize').prop("disabled", true);
+            }
+            console.log(deployed[9]);
+            
+            if(deployed[9].toString() != "0x0000000000000000000000000000000000000000") {
+              challengeTemplate.find('#winner-log').show();
+              challengeTemplate.find('#winner-log-name').text(deployed[9]);
+            }
+            
+
+            challengeRow.append(challengeTemplate.html());
+            console.log(deployed[9]);
+              
           }
-
-          var timestamp = new Date( deployed[3] *1);
-
-          challengeTemplate.find('#hashit').text(deployed[8]);
-          challengeTemplate.find('#nameit').text(deployed[0]);
-          challengeTemplate.find('#descriptit').text(deployed[1]);
-          challengeTemplate.find('#goalit').text(deployed[5].toNumber());
-          challengeTemplate.find('#timstampit').text(timestamp.toLocaleDateString());
-          challengeTemplate.find('#goaldescripit').text(deployed[2]);
-          challengeTemplate.find('#prizeit').text(deployed[4].toNumber());
-          challengeTemplate.find('#feeit').text(deployed[6].toNumber());
-          challengeTemplate.find('#ownerit').text(deployed[7]);
-
-          console.log("I AM THE: " + deployed[7]);
-          if(web3.eth.accounts[selectedNumber] != deployed[7]) {
-            challengeTemplate.find('#issue-prize').prop("disabled", true);
-          }
-          console.log(deployed[9]);
           
-          if(deployed[9].toString() != "0x0000000000000000000000000000000000000000") {
-            challengeTemplate.find('#winner-log').show();
-            challengeTemplate.find('#winner-log-name').text(deployed[9]);
-          }
-          
-
-          challengeRow.append(challengeTemplate.html());
-          console.log(deployed[9]);
 
            
         });
