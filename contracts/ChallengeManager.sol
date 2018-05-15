@@ -166,10 +166,22 @@ contract ChallengeManager is Owned {
     			// Deleting the Challenge
     			// Put the last element in the gap
     			// Deleting last element
+    			if (challengesLength > 1) {
+    				challenges[i] = challenges[challengeLength-1];
+	    			delete challenges[challengeLength-1];
+	    			challengesLength = challengesLength.sub(1);
+    			} else {
+    				delete challenges[challengeLength-1];
+	    			challengesLength = challengesLength.sub(1);
+    			}
+    			//delete challenges[i];
+    			//challenges[i] = challenges[challengesLength-1];
+    			//challengesLength = challengesLength.sub(1);
 
-    			challenges[i] = challenges[challengeLength-1];
-    			delete challenges[challengeLength-1];
-    			challengesLength = challengesLength.sub(1);
+
+    			//challenges[i] = challenges[challengeLength-1];
+    			//delete challenges[challengeLength-1];
+    			//challengesLength = challengesLength.sub(1);
 
     			// TODO: Resolve the bug in the above code.
 
