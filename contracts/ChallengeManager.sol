@@ -187,10 +187,10 @@ contract ChallengeManager is Owned {
 	// ----------------------------------------------------------------------------	
 
 	function issuePrize(address contractadd, string hash) public returns(bool success){
-
+		
 		for (uint i = 0; i < challenges.length; i++) {
 			
-			if ((msg.sender == challenges[i].owner) && (challenges[i].challengeHash == keccak256(hash))) {
+			if ((msg.sender == challenges[i].owner) && (challenges[i].challengeHash == keccak256(hash) && (challenges[i].winner != address(0)))) {
 
 				WelCoin(contractadd).virtualDepositTransferFrom(challenges[i].owner, challenges[i].winner, challenges[i].prize);
 
@@ -273,5 +273,5 @@ contract ChallengeManager is Owned {
 	function getChallengeWinner(uint index1) public constant returns(address winner){
 		return challenges[index1].winner;
 	}
-	
+
 }
