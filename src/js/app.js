@@ -11,6 +11,8 @@ var selectedChall;
 //JSON that contains users
 var UsersJSON;
 
+var portToUse;
+
 // ------------------------------------------------------------------------
 //  Retrieve the value of a url variable
 // ------------------------------------------------------------------------
@@ -24,6 +26,12 @@ function getQueryVariable(variable)
    if(pair[0] == variable){return pair[1];}
  }
  return(false);
+}
+
+function setCurrentPort() {
+  var getUrl = window.location.href;
+  var port = getUrl.split(":")[2];
+  portToUse = parseInt(port.split("/")[0]);
 }
 
 App = {
@@ -74,6 +82,7 @@ App = {
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
     }
     web3 = new Web3(App.web3Provider);
+    setCurrentPort();
 
     return App.initContract();
   },
@@ -170,7 +179,7 @@ App = {
             challengeTemplate.find('#winner-log-name').text(deployed[9]);
           }
           challengeRow.append(challengeTemplate.html());
-          
+
         }
       });
     });
@@ -251,7 +260,7 @@ handleSteps: function(event) {
 switchWallet: function(event) {
   var select = document.getElementById("walletSelector");
   selectedNumber = parseInt(select.options[select.selectedIndex].value);
-  window.location.href = "http://localhost:3000/?wallet=" + selectedNumber;
+  window.location.href = "http://localhost:"+ portToUse +"/?wallet=" + selectedNumber;
 
 },
 
@@ -435,7 +444,7 @@ stop: function(event) {
 
     selectedNumber = parseInt(select.options[select.selectedIndex].value);
     selectedChallengeNumber = parseInt(selectChallenge.options[selectChallenge.selectedIndex].value);
-    window.location.href = "http://localhost:3000/?wallet=" + selectedNumber + "&challenge=" + selectedChallengeNumber;
+    window.location.href = "http://localhost:"+ portToUse +"3000/?wallet=" + selectedNumber + "&challenge=" + selectedChallengeNumber;
   }
 };
 
