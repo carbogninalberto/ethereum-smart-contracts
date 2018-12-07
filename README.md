@@ -5,6 +5,7 @@
 No Copyright Infringement Intended.
 
 LICENSE.
+
 You can use this code as you want, also for commercial use,
 but you have to add "Ethereum Watcher - Alberto Carbognin"
 in your application.
