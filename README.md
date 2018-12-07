@@ -1,6 +1,13 @@
 # Demo v0.1.0
 ![alt text](https://preview.ibb.co/i9iTdc/preview.png)
 
+### Disclamer
+No Copyright Infringement Intended.
+LICENSE.
+You can use this code as you want, also for commercial use,
+but you have to add "Ethereum Watcher - Alberto Carbognin"
+in your application.
+
 ### Introduction
 
 Ganache allows developer to run ethereum blockchain privately and locally.
