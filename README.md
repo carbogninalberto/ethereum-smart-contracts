@@ -1,5 +1,5 @@
 # Demo v0.1.0
-![alt text](https://i.ibb.co/fSXSH0Y/logo.png)
+![alt text](https://i.ibb.co/NWvy9P7/logo.png)
 
 ### Disclamer
 No Copyright Infringement Intended.
