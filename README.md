@@ -1,5 +1,6 @@
 # Demo v0.1.0
-![alt text](https://ibb.co/pP1PdXv)
+![alt text](https://i.ibb.co/fSXSH0Y/logo.png)
+https://preview.ibb.co/pP1PdXv/preview.png
 
 ### Disclamer
 No Copyright Infringement Intended.
