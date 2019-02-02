@@ -79,7 +79,7 @@ App = {
       App.web3Provider = web3.currentProvider;
     } else {
       // If no injected web3 instance is detected, fall back to Ganache
-      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+      App.web3Provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545');
     }
     web3 = new Web3(App.web3Provider);
     setCurrentPort();
@@ -118,6 +118,7 @@ App = {
           from: web3.eth.accounts[selectedNumber], gasPrice: 2, gas: 5000000});
 
         console.log("challengeNumber = " + challengeNumber);
+
 
         if(getQueryVariable("challenge")) {
           selectedChall = getQueryVariable("challenge");
@@ -444,7 +445,7 @@ stop: function(event) {
 
     selectedNumber = parseInt(select.options[select.selectedIndex].value);
     selectedChallengeNumber = parseInt(selectChallenge.options[selectChallenge.selectedIndex].value);
-    window.location.href = "http://localhost:"+ portToUse +"3000/?wallet=" + selectedNumber + "&challenge=" + selectedChallengeNumber;
+    window.location.href = "http://localhost:3000/?wallet=" + selectedNumber + "&challenge=" + selectedChallengeNumber;
   }
 };
 

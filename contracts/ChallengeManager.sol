@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.5.0;
 
 // ----------------------------------------------------------------------------
 //  Manage User Challenge
@@ -39,7 +39,7 @@ contract ChallengeManager is Owned {
 		uint prize;
 		uint target;
 		uint fee;
-		address owner;
+		address payable owner;
 		bytes32 challengeHash;
 
 		// these arrays rappresent the same object
@@ -78,9 +78,9 @@ contract ChallengeManager is Owned {
 	// ----------------------------------------------------------------------------
 
 	function createChallenge(
-		string nameCreate,
-		string descriptionCreate,
-		string targetDescriptionCreate,
+		string memory nameCreate,
+		string memory descriptionCreate,
+		string memory targetDescriptionCreate,
 		uint prizeCreate,
 		uint targetCreate,
 		uint feeCreate,
@@ -125,11 +125,11 @@ contract ChallengeManager is Owned {
 	//	@hash: Unique identifier of the challenge
 	// ----------------------------------------------------------------------------
 
-	function participateToChallenge(address contractadd, string hash) public returns(bool success) {
+	function participateToChallenge(address contractadd, string memory hash) public returns(bool success) {
 
 		for (uint i = 0; i < challenges.length; i++) {
 			
-			if (challenges[i].challengeHash == keccak256(hash)) {
+			if (challenges[i].challengeHash == keccak256(abi.encodePacked(hash))) {
 				//WelCoin cont = WelCoin(contracadd);
 				WelCoin(contractadd).virtualDepositTransferFrom(msg.sender, challenges[i].owner, challenges[i].fee);
 				challenges[i].participantsAddress.push(msg.sender);
@@ -154,10 +154,10 @@ contract ChallengeManager is Owned {
 	//	@hash: Unique identifier of the challenge
 	// ----------------------------------------------------------------------------
 
-	function depositGoalUnit(uint goalUnit, string hash) public returns(bool success){
+	function depositGoalUnit(uint goalUnit, string memory hash) public returns(bool success){
 
 		for (uint i = 0; i < challenges.length; i++) {
-			if (challenges[i].challengeHash == keccak256(hash)) {
+			if (challenges[i].challengeHash == keccak256(abi.encodePacked(hash))) {
 				for(uint j = 0; j < challenges[i].participantsAddress.length; j++) {
 
 					if (msg.sender == challenges[i].participantsAddress[j]) {
@@ -186,11 +186,11 @@ contract ChallengeManager is Owned {
 	//	@hash: Unique identifier of the challenge
 	// ----------------------------------------------------------------------------	
 
-	function issuePrize(address contractadd, string hash) public returns(bool success){
+	function issuePrize(address contractadd, string memory hash) public returns(bool success){
 		
 		for (uint i = 0; i < challenges.length; i++) {
 			
-			if ((msg.sender == challenges[i].owner) && (challenges[i].challengeHash == keccak256(hash) && (challenges[i].winner != address(0)))) {
+			if ((msg.sender == challenges[i].owner) && (challenges[i].challengeHash == keccak256(abi.encodePacked(hash)) && (challenges[i].winner != address(0)))) {
 
 				WelCoin(contractadd).virtualDepositTransferFrom(challenges[i].owner, challenges[i].winner, challenges[i].prize);
 
@@ -224,12 +224,12 @@ contract ChallengeManager is Owned {
 	//	@hash: Unique identifier of the challenge
 	// ----------------------------------------------------------------------------	
 
-	function getChallengePartecipantsGoal(string hash) public constant returns(uint goal){
+	function getChallengePartecipantsGoal(string memory hash) public view returns(uint goal){
 
 		uint challengeLength = challenges.length;
 
 		for (uint i = 0; i < challengeLength; i++) {
-			if (challenges[i].challengeHash == keccak256(hash)) {
+			if (challenges[i].challengeHash == keccak256(abi.encodePacked(hash))) {
 
 				for(uint j = 0; j < challenges[i].participantsAddress.length; j++) {
 					if (msg.sender == challenges[i].participantsAddress[j]) {
@@ -258,19 +258,19 @@ contract ChallengeManager is Owned {
 
 	// these are getter
 
-	function getChallengeParticipantsLength(uint challIndex) public constant returns(uint length) {
+	function getChallengeParticipantsLength(uint challIndex) public view returns(uint length) {
 		return challenges[challIndex].participantsAddress.length;
 	}
 
-	function getChallengeParticipants(uint index1, uint index2) public constant returns(address participant){
+	function getChallengeParticipants(uint index1, uint index2) public view returns(address participant){
 		return challenges[index1].participantsAddress[index2];
 	}
 
-	function getChallengeParticipantsGoal(uint index1, uint index2) public constant returns(uint participant){
+	function getChallengeParticipantsGoal(uint index1, uint index2) public view returns(uint participant){
 		return challenges[index1].participantsGoal[index2];
 	}
 
-	function getChallengeWinner(uint index1) public constant returns(address winner){
+	function getChallengeWinner(uint index1) public view returns(address winner){
 		return challenges[index1].winner;
 	}
 

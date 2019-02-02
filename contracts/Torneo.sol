@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.0;
 
 // ----------------------------------------------------------------------------
 //  Torneo manager
@@ -19,8 +19,8 @@ contract Torneo {
 	uint target;
     uint decimals;
 	string targetDescription;
-	address contract_address;
-    address owner;
+	Torneo contract_address;
+    address payable owner;
     address winner;
     bool isActive;
 
@@ -31,13 +31,13 @@ contract Torneo {
 
 	//Constructor
 	constructor(
-		string initialName,
-		string initialDescription,
+		string memory initialName,
+		string memory initialDescription,
 		uint initialPrize,
 		uint initialFee,
 		uint initialTarget,
-		string initialTargetDescription,
-        address initialOwner,
+		string memory initialTargetDescription,
+        address payable initialOwner,
         uint initialDecimals
 	) public {
 		name = initialName;
@@ -52,7 +52,7 @@ contract Torneo {
 		contract_address = this; //this cointains contract's address information
 	}
 
-    function isPartecipant(address partecipant) public constant returns(bool state) {
+    function isPartecipant(address partecipant) public view returns(bool state) {
         if (partecipants[partecipant]) {
             return true;
         } else {
@@ -60,20 +60,20 @@ contract Torneo {
         }
     }
 
-    function getFee() public constant returns(uint cost) {
+    function getFee() public view returns(uint cost) {
         return fee;
     }
 
-    function isActiveStatus() public constant returns(bool active) {
+    function isActiveStatus() public view returns(bool active) {
         return isActive;
     }
 
 
-    function getOwner() public constant returns(address theOwner) {
+    function getOwner() public view returns(address theOwner) {
         return owner;
     }
 
-    function getWinner() public constant returns(address theWinner) {
+    function getWinner() public view returns(address theWinner) {
         require (isActive == false);
         
         return winner;

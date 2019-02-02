@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.0;
 
 
 // ----------------------------------------------------------------------------
@@ -64,9 +64,9 @@ contract Owned {
 //  ERC20 Interface
 // ----------------------------------------------------------------------------
 contract ERC20Interface {
-  function totalSupply() public constant returns (uint);
-  function balanceOf(address tokenOwner) public constant returns (uint balance);
-  function allowance(address tokenOwner, address spender) public constant returns (uint remaining);
+  function totalSupply() public view returns (uint);
+  function balanceOf(address tokenOwner) public view returns (uint balance);
+  function allowance(address tokenOwner, address spender) public view returns (uint remaining);
   function transfer(address to, uint tokens) public returns (bool success);
   function approve(address spender, uint tokens) public returns (bool success);
   function transferFrom(address from, address to, uint tokens) public returns (bool success);
@@ -89,12 +89,12 @@ contract WelCoin is ERC20Interface, Owned {
   //Describing Contract basic informations
   string public name;
   string public symbol;
-  uint public totalSupply;
+  uint public totalQuantitySupply;
   uint public decimals;
   uint public stepsTokenRate;
   bool public isRateActive;
   bool public newIssue;
-  address public contract_address;
+  WelCoin public contract_address;
 
   //Building Dictionary for Balances Account
   mapping(address => uint) balances;
@@ -105,8 +105,8 @@ contract WelCoin is ERC20Interface, Owned {
 
   //Constructor
   constructor(
-    string initialName,
-    string initalSymbol,
+    string memory initialName,
+    string memory initalSymbol,
     uint initialSupply,
     uint initialStepsTokenRate,
     uint initialDecimals,
@@ -116,48 +116,48 @@ contract WelCoin is ERC20Interface, Owned {
     name = initialName;
     symbol = initalSymbol;
     decimals = initialDecimals;
-    totalSupply = initialSupply * 10**uint(initialDecimals);
+    totalQuantitySupply = initialSupply * 10**uint(initialDecimals);
     stepsTokenRate = initialStepsTokenRate;
     isRateActive = initialIsRateActive;
     newIssue = initialNewIssue;
     contract_address = this; //this cointains contract's address information
 
     //updating initial balances
-    balances[owner] = totalSupply;
+    balances[owner] = totalQuantitySupply;
 
     //fire up Transfer event
-    emit Transfer(address(0), owner, totalSupply);
+    emit Transfer(address(0), owner, totalQuantitySupply);
   }
 
   //return the balance of a Token Owner
-  function balanceOf(address tokenOwner) public constant returns(uint balance) {
+  function balanceOf(address tokenOwner) public view returns(uint balance) {
     return balances[tokenOwner];
   }
 
   //return the balance of Owner
-  function balanceOfOwner() public constant returns(uint balance) {
+  function balanceOfOwner() public view returns(uint balance) {
     return balances[owner];
   }
 
-  function totalSupply() public constant returns(uint supply) {
-    return totalSupply;
+  function totalSupply() public view returns(uint supply) {
+    return totalQuantitySupply;
   }
 
   //return balance of the contract 
-  function contractBalance() public constant returns(uint balance) {
-    return contract_address.balance;
+  function contractBalance() public view returns(uint balance) {
+    return address(contract_address).balance;
   }
 
   //return parameters
-  function getData() public constant returns(
-    string nameData,
-    string symbolData,
+  function getData() public view returns(
+    string memory nameData,
+    string memory symbolData,
     uint totalSupplyData,
     uint stepsTokenRateData,
     bool isRateActiveData,
     bool newIssueData
     ) {
-    return (name, symbol, totalSupply, stepsTokenRate, isRateActive, newIssue);
+    return (name, symbol, totalQuantitySupply, stepsTokenRate, isRateActive, newIssue);
   }
 
   //deposit ether as token
@@ -262,7 +262,7 @@ contract WelCoin is ERC20Interface, Owned {
   // Returns the amount of tokens approved by the owner that can be
   // transferred to the spender's account
   // ------------------------------------------------------------------------
-  function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {
+  function allowance(address tokenOwner, address spender) public view returns (uint remaining) {
     return allowed[tokenOwner][spender];
   }
 
@@ -273,7 +273,7 @@ contract WelCoin is ERC20Interface, Owned {
     require(msg.sender == owner);
     if (newIssue) {
       balances[owner] = balances[owner].add(amount);
-      totalSupply = totalSupply.add(amount);
+      totalQuantitySupply = totalQuantitySupply.add(amount);
       emit Transfer(address(0), owner, amount);
       } else {
         revert();
